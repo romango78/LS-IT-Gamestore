@@ -1,0 +1,37 @@
+.app-header {
+  background-color: #222222;
+}
+
+  .app-header .context-area {
+    height: 655px;
+    padding-top: 52px !important;
+    color: #FFFFFF;
+    font-size: 1rem;
+    letter-spacing: 0;
+  }
+
+  .app-header .nav-link {
+    font-size: 1.15rem;
+    font-weight: bold;
+    line-height: 19px;
+  }
+
+.logo {
+  font-size: 2.6rem;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 44px;
+}
+
+.title {  
+  font-size: 3.2rem;
+  font-weight: bold;
+  line-height: 57px;
+}
+
+.subtitle {
+  margin-bottom: 100px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  line-height: 27px;
+}

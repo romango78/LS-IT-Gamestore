@@ -1,0 +1,26 @@
+.app-footer {
+  background-color: #222222;
+}
+
+  .app-footer .context-area {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+    color: #FFFFFF;    
+    font-size: 1rem;
+    line-height: 18px;
+    letter-spacing: 0;
+  }
+
+  .app-footer h5 {
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 19px;
+  }
+
+  .app-footer .copyright {
+    margin-top: 56px;
+  }
+
+  .app-footer .nav-item {
+    font-family: "Open Sans";
+}
