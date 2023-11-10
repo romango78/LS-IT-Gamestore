@@ -1,12 +1,12 @@
 import React from 'react'
 import { Col, Row, NavLink, Container, Navbar, NavbarBrand, NavbarToggler, Collapse } from 'reactstrap'
-import { IMenuItem, Menu } from './../components/Menu'
+import { Menu, MenuItem } from './../components'
 
 import { mainMenuItems } from './../assets/Links'
 import './../assets/styles/header.css'
 import background from './../assets/images/header-background.png'
 
-function Header() {
+const Header: React.FC = () => {
   const [collapsed, setCollapsed] = React.useState(true);
   const [titleClass, setTitleClass] = React.useState("g-0 h-100 align-items-end");
 
@@ -28,7 +28,7 @@ function Header() {
           <Collapse navbar isOpen={!collapsed} className="justify-content-end">
             <Menu navbar
               items={mainMenuItems}
-              renderItem={(item: IMenuItem) => (
+              renderItem={(item: MenuItem) => (
                 <NavLink href={item.link} className="text-reset text-end text-uppercase">{item.title}</NavLink>
                 )} />          
           </Collapse>

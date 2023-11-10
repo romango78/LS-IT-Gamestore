@@ -1,10 +1,11 @@
+import React from 'react'
 import { Row, Col, NavLink } from 'reactstrap'
-import { IMenuItem, Menu } from './../components/Menu'
+import { MenuItem, Menu } from './../components'
 
 import './../assets/styles/footer.css'
 import { siteLinksMenuItems, companyInfoMenuItems, socialMediaMenuItems } from '../assets/Links'
 
-function Footer() {
+const Footer: React.FC = () => {
   return (
     <footer className="app-footer">
       <div className="container-fluid context-area text-start">
@@ -12,21 +13,21 @@ function Footer() {
           <Col>
             <Menu vertical label="Site Links"
               items={siteLinksMenuItems}
-              renderItem={(item: IMenuItem) => (
+              renderItem={(item: MenuItem) => (
                 <NavLink href={item.link} className="p-0 text-reset">{item.title}</NavLink>
                 )} />
           </Col>
           <Col>
             <Menu vertical label="Company Information"
               items={companyInfoMenuItems}
-              renderItem={(item: IMenuItem) => (
+              renderItem={(item: MenuItem) => (
                 <NavLink href={item.link} className="p-0 text-reset">{item.title}</NavLink>
                 )} />
           </Col>
           <Col>
             <Menu vertical className="flex-md-row" label="Social Media"
               items={socialMediaMenuItems}
-              renderItem={(item: IMenuItem) => (
+              renderItem={(item: MenuItem) => (
                 <NavLink href={item.link} className="p-0">{<item.img />}</NavLink>
                 )} />
           </Col>

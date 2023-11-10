@@ -1,55 +1,54 @@
-section {
-  .gutter {
-    margin-bottom: 80px;  
-  }
+section .gutter {
+  margin-bottom: 80px;  
+}
 
-  & textarea.form-control {
-    min-height: 100px !important;
-  }
+section textarea.form-control {
+  min-height: 100px !important;
 }
 
 section .fluid {
   background-color: #F7F7F7;
   padding: 30px 25px 30px 25px;
   text-align: left;
-
-  .btn {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 19px;
-    padding: 13px 40px 13px 40px;
-    border-radius: 0px;
-  }
-
-  .btn-primary {
-    background-color: #FF7E2A;
-    border-color: #FF7E2A;
-  }
-
-  .form-control {
-    border: 1px solid #7F7F7F !important;
-  }
-
-  .form-label {
-    margin-bottom: 5px;
-    color: #3E4554;
-    font-family: "Open Sans";
-    font-size: 14px;
-    line-height: 19px;
-  }
-
-  .fs-title {
-    color: #3E4554;
-    font-size: 26px;
-    font-weight: bold;
-    line-height: 32px;
-    margin-bottom: 24px;
-  }
-
-  .mb-formgroup {
-    margin-bottom: 17px !important;
-  }
 }
+
+section .fluid .btn {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19px;
+  padding: 13px 40px 13px 40px;
+  border-radius: 0px;
+}
+
+section .fluid .btn-primary {
+  background-color: #FF7E2A;
+  border-color: #FF7E2A;
+}
+
+section .fluid .form-control {
+  border: 1px solid #7F7F7F !important;
+}
+
+section .fluid .form-label {
+  margin-bottom: 5px;
+  color: #3E4554;
+  font-family: "Open Sans";
+  font-size: 14px;
+  line-height: 19px;
+}
+
+section .fluid .fs-title {
+  color: #3E4554;
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 32px;
+  margin-bottom: 24px;
+}
+
+section .fluid .mb-formgroup {
+  margin-bottom: 17px !important;
+}
+
 
 @media (min-width: 1200px) {
   section .fluid.gutter {

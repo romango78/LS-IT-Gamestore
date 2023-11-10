@@ -1,11 +1,10 @@
 import React from 'react';
 import { Container, Row, Col } from 'reactstrap'
+import { GetInTouch } from '../components'
 
 import './../assets/styles/main.css';
 
-import GetInTouch from '../components/GetInTouch'
-
-function Main() {
+const Main: React.FC = () => {
   return (
     <section id="main">
       <Container fluid className="context-area">

@@ -1,57 +1,50 @@
-import { Nav, NavItem, NavLink } from 'reactstrap'
+import * as React from "react";
+import { Nav, NavItem, NavLink, NavProps } from 'reactstrap'
 
-export interface IMenuItem {
+export interface MenuItem {
   id: string,
   title?: string,
   img?: any,
   link: string
-};
-
-interface IMenuItemsParams {
-  items?: IMenuItem[],
-  renderItem: any
 }
 
-interface IMenuParams {
-  label?: string,
-  items?: IMenuItem[],
-  renderItem?: any,
-  renderEmpty?: any,
-  [prop: string]: any
+export interface MenuProps extends NavProps{
+  items?: MenuItem[] | null,
+  label?: string | null,
+  renderItem?: React.FC<MenuItem>,
+  renderEmpty?: React.FC
 }
 
-function MenuItems({ items, renderItem }: IMenuItemsParams) {
-  return (
-    <>
-      {items?.map((item) => (
-        <NavItem key={item.id} className="me-3 mb-3">
-          {renderItem(item)}
-        </NavItem>
-      ))}
-    </>
-  );
-};
+const Menu: React.FC<MenuProps> = (props) => {
+  const {
+    items = null,
+    label = null,
+    renderItem = ((item) => (<NavLink href={item.link}>{item.title}</NavLink>)),
+    renderEmpty = (() => (<p></p>)),
+    ...navProps
+  } = props;
 
-export const Menu = ({ label, items, renderItem, renderEmpty, ...props }: IMenuParams) => {
   const isNoItems = !items?.length;
   const noLabel = label == null;
 
   return isNoItems
-    ? renderEmpty
+    ? (
+      <>
+        {renderEmpty}
+      </>
+    )
     : (
       <>
         {noLabel ? `` : (<h5 className="mb-3">{label}</h5>)}
-        <Nav {...props} >
-          <MenuItems items={items}
-            renderItem={renderItem} />
+        <Nav {...navProps} >
+          {items?.map((item) => (
+            <NavItem key={item.id} className="me-3 mb-3">
+              {renderItem(item)}
+            </NavItem>
+          ))}
         </Nav>
       </>
     );
-};
+}
 
-Menu.defaultProps = {
-  label: null,
-  items: null,
-  renderItem: ((item: IMenuItem) => (<NavLink href={item.link}>{item.title}</NavLink>)),
-  renderEmpty: (<p></p>)
-};
+export default Menu;

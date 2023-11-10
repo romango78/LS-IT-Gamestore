@@ -1,10 +1,11 @@
-import './../assets/styles/app.css';
-
+import React from 'react';
 import Footer from './../layouts/Footer'
 import Header from './../layouts/Header';
 import Main from './../layouts/Main';
 
-function App() {
+import './../assets/styles/app.css';
+
+const App: React.FC = () => {
   return (
     <div className="app container-fluid p-0">
       <Header />

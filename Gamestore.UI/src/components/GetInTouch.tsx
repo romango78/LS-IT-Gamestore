@@ -4,7 +4,7 @@ import useGetInTouch from './hooks/GetInTouchHooks'
 
 import './../assets/styles/main.css';
 
-const GetInTouch = () => {
+const GetInTouch: React.FC = () => {
   const { model, handleChange, handleSubmit } = useGetInTouch();
 
   return (
@@ -17,7 +17,7 @@ const GetInTouch = () => {
           </Label>
           <Input id="get-in-touch-name" name="name" type="text"
             value={model.name}
-            onChange={handleChange} />
+            onChange={handleChange} required />
         </FormGroup>
         <FormGroup className="mb-formgroup">
           <Label for="get-in-touch-email">
@@ -25,7 +25,7 @@ const GetInTouch = () => {
           </Label>
           <Input id="get-in-touch-email" name="email" type="email"
             value={model.email}
-            onChange={handleChange} />
+            onChange={handleChange} required />
         </FormGroup>
         <FormGroup className="mb-formgroup">
           <Label for="get-in-touch-message">
@@ -33,10 +33,10 @@ const GetInTouch = () => {
           </Label>
           <Input id="get-in-touch-message" name="message" type="textarea"
             value={model.message}
-            onChange={handleChange} />
+            onChange={handleChange} required />
         </FormGroup>
         <div className="clearfix">
-          <Button id="get-in-touch-submit-btn" name="submit" color="primary" className="float-end">
+          <Button id="get-in-touch-submit-btn" name="submit" type="submit" color="primary" className="float-end">
             Submit
           </Button>
         </div>
