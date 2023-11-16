@@ -2,6 +2,14 @@ section .gutter {
   margin-bottom: 80px;  
 }
 
+section .gutter-lg {
+  margin-bottom: 80px;
+}
+
+section .gutter-xl {
+  margin-bottom: 80px;
+}
+
 section textarea.form-control {
   min-height: 100px !important;
 }
@@ -12,7 +20,7 @@ section .fluid {
   text-align: left;
 }
 
-section .fluid .btn {
+section .btn {
   font-size: 16px;
   font-weight: 500;
   line-height: 19px;
@@ -20,8 +28,13 @@ section .fluid .btn {
   border-radius: 0px;
 }
 
-section .fluid .btn-primary {
+section .btn-primary {
   background-color: #FF7E2A;
+  border-color: #FF7E2A;
+}
+
+section .btn-primary:hover {
+  background-color: #E87326;
   border-color: #FF7E2A;
 }
 
@@ -37,7 +50,7 @@ section .fluid .form-label {
   line-height: 19px;
 }
 
-section .fluid .fs-title {
+section .fs-title {
   color: #3E4554;
   font-size: 26px;
   font-weight: bold;
@@ -49,9 +62,14 @@ section .fluid .mb-formgroup {
   margin-bottom: 17px !important;
 }
 
+@media (min-width: 992px) {
+  section .gutter-lg {
+    margin-bottom: 0px;
+  }
+}
 
 @media (min-width: 1200px) {
-  section .fluid.gutter {
+  section .gutter-xl {
     margin-bottom: 0px;
   }
 }

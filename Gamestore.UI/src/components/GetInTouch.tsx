@@ -2,13 +2,13 @@ import React from 'react';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import useGetInTouch from './hooks/GetInTouchHooks'
 
-import './../assets/styles/main.css';
+import './../assets/styles/common.css';
 
 const GetInTouch: React.FC = () => {
   const { model, handleChange, handleSubmit } = useGetInTouch();
 
   return (
-    <section id="get-in-touch" className="fluid gutter">
+    <section id="get-in-touch" className="fluid gutter-xl">
       <p className="fs-title">Get In Touch</p>
       <Form id="get-in-touch-form" tag="form" onSubmit={handleSubmit} >
         <FormGroup className="mb-formgroup">

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 import { Col, Row, NavLink, Container, Navbar, NavbarBrand, NavbarToggler, Collapse } from 'reactstrap'
 import { Menu, MenuItem } from './../components'
 
@@ -9,6 +10,7 @@ import background from './../assets/images/header-background.png'
 const Header: React.FC = () => {
   const [collapsed, setCollapsed] = React.useState(true);
   const [titleClass, setTitleClass] = React.useState("g-0 h-100 align-items-end");
+  const currentLocation = useLocation();
 
   const toggleNavbar = () => {
     setCollapsed(!collapsed);
@@ -23,13 +25,17 @@ const Header: React.FC = () => {
     }}>
       <Container fluid className="context-area">
         <Navbar dark container={false} expand="lg">
-          <NavbarBrand href="#" className="logo text-reset">logo</NavbarBrand>
+          <NavbarBrand href="/" className="logo text-reset">logo</NavbarBrand>
           <NavbarToggler onClick={toggleNavbar} />
           <Collapse navbar isOpen={!collapsed} className="justify-content-end">
             <Menu navbar
               items={mainMenuItems}
               renderItem={(item: MenuItem) => (
-                <NavLink href={item.link} className="text-reset text-end text-uppercase">{item.title}</NavLink>
+                <NavLink href={item.link}
+                  className="text-end text-uppercase"
+                  active={currentLocation.pathname === item.link} >
+                  {item.title}
+                </NavLink>
                 )} />          
           </Collapse>
         </Navbar>

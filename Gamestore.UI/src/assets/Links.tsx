@@ -5,19 +5,19 @@ import { ReactComponent as InstagramLink } from './images/instagram-logo-svgrepo
 import { ReactComponent as GooglePlusLink } from './images/google-plus-logo-symbol-svgrepo-com.svg'
 
 export const mainMenuItems = [
-  { id: "games-menu-item", title: "Games", link: "#" },
-  { id: "genres-menu-item", title: "Genres", link: "#" },
-  { id: "publishers-menu-item", title: "Publishers", link: "#" },
-  { id: "orders-menu-item", title: "Orders", link: "#" },
-  { id: "cart-menu-item", title: "Cart", link: "#" }
+  { id: "games-menu-item", title: "Games", link: "/games" },
+  { id: "genres-menu-item", title: "Genres", link: "/genres" },
+  { id: "publishers-menu-item", title: "Publishers", link: "/publishers" },
+  { id: "orders-menu-item", title: "Orders", link: "/orders" },
+  { id: "cart-menu-item", title: "Cart", link: "/cart" }
 ];
 
 export const siteLinksMenuItems = [
-  { id: "games-sitelink-item", title: "Games", link: "#" },
-  { id: "genres-sitelink-item", title: "Genres", link: "#" },
-  { id: "publishers-sitelink-item", title: "Publishers", link: "#" },
-  { id: "orders-sitelink-item", title: "Orders", link: "#" },
-  { id: "cart-sitelink-item", title: "My Bucket", link: "#" }
+  { id: "games-sitelink-item", title: "Games", link: "/games" },
+  { id: "genres-sitelink-item", title: "Genres", link: "/genres" },
+  { id: "publishers-sitelink-item", title: "Publishers", link: "/publishers" },
+  { id: "orders-sitelink-item", title: "Orders", link: "/orders" },
+  { id: "cart-sitelink-item", title: "My Bucket", link: "/cart" }
 ];
 
 export const companyInfoMenuItems = [

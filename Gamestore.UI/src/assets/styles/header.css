@@ -1,20 +1,28 @@
+.app-header .navbar-nav .nav-link {
+  color: #fff;
+}
+
+.app-header .navbar-nav .nav-link.active {
+  color: #FF7E2A;
+}
+
 .app-header {
   background-color: #222222;
 }
 
-  .app-header .context-area {
-    height: 655px;
-    padding-top: 52px !important;
-    color: #FFFFFF;
-    font-size: 1rem;
-    letter-spacing: 0;
-  }
+.app-header .context-area {
+  height: 655px;
+  padding-top: 52px !important;
+  color: #FFFFFF;
+  font-size: 1rem;
+  letter-spacing: 0;
+}
 
-  .app-header .nav-link {
-    font-size: 1.15rem;
-    font-weight: bold;
-    line-height: 19px;
-  }
+.app-header .nav-link {
+  font-size: 1.15rem;
+  font-weight: bold;
+  line-height: 19px;
+}
 
 .logo {
   font-size: 2.6rem;
