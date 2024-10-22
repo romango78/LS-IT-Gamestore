@@ -18,6 +18,7 @@ const Body: React.FC = () => {
               <Route path="/publishers" element={<Publishers />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="*" element={<Main />} />
             </Routes>          
         </Row>
         <Row xl="3" xs="1" className="g-0">
