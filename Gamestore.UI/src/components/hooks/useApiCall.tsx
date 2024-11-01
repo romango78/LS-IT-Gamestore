@@ -1,31 +1,57 @@
 import React from 'react';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
 export interface UseApiCallProps {
-  apiCall: () => Promise<any>,
+  apiRequest: AxiosRequestConfig,
+  setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>,
   setData: React.Dispatch<React.SetStateAction<any>>,
-  once?: boolean
+  deps?: React.DependencyList
 };
 
 const useApiCall = (props: UseApiCallProps) => {
   const {
-    apiCall,
+    apiRequest,
+    setIsLoading = undefined,
     setData,
-    once = false
+    deps = []
   } = props;
-  
-  React.useEffect(() => {
-    apiCall()
-      .then((response) => {
-        return response.json()
+
+  const request = apiRequest;
+
+  const setIsLoadingInternal = (val: boolean) => {
+    if (setIsLoading === undefined || setIsLoading === null) {
+      return;
+    }
+
+    setIsLoading(val);
+  }
+
+  const callApi = async () => {
+    setIsLoadingInternal(true);
+
+    await axios(request)
+      .then(response => {
+        setData(response.data);
       })
-      .then(data => {
-        setData(data)
-      })
-      .catch(error => {
+      .catch(reason => {
+        let error: any;
+        if (reason?.isAxiosError) {
+          const axiosError = reason as AxiosError;
+          error = request.method + ' ' + request.url + ' ' + axiosError?.message;
+        } else {
+          error = reason;
+        }
         console.error(error);
       });
-  }, []);
-  
+
+    setIsLoadingInternal(false);
+  };
+
+  const callback = React.useCallback(() => callApi(), deps);
+
+  React.useEffect(() => {
+    callback();
+  }, [callback]);  
 }
 
 export default useApiCall;
