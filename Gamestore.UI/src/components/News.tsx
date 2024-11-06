@@ -48,14 +48,17 @@ const News: React.FC = () => {
   //  return () => clearInterval(intervalAppIdChaging);
   //}, []);
 
-  //const [appId, setAppId] = React.useState(440);
+  const [gameId, setGameId] = React.useState('440');
   const [news, setNews] = React.useState({ 'game-id': '', 'source': '', 'title': '', 'contents': '', 'read-more': '' });
-  const [newsRequest, setNewsRequest] = React.useState(getNewsRequest('440'));
+  const [newsRequest, setNewsRequest] = React.useState(getNewsRequest(gameId));
 
   function getNewsRequest(gameId: string): AxiosRequestConfig {
     const config: AxiosRequestConfig = {
-      url: "https://ad49xs3450.execute-api.us-east-1.amazonaws.com/news/2",
+      url: "https://ad49xs3450.execute-api.us-east-1.amazonaws.com/news",
       method: "GET",
+      params: {
+        gameId: gameId
+      },
       headers: {
         'Content-Type': 'application/json'
       }
