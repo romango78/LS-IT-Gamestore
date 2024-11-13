@@ -4,6 +4,7 @@ import { AxiosRequestConfig } from 'axios';
 import useApiCall from './hooks/useApiCall';
 
 import './../assets/styles/common.css';
+import useAwsAuth from './hooks/useAwsAuth';
 
 
 const News: React.FC = () => {
@@ -51,6 +52,7 @@ const News: React.FC = () => {
   const [gameId, setGameId] = React.useState('440');
   const [news, setNews] = React.useState({ 'game-id': '', 'source': '', 'title': '', 'contents': '', 'read-more': '' });
   const [newsRequest, setNewsRequest] = React.useState(getNewsRequest(gameId));
+  const [newsRequestWithAuth, setNewsRequestWithAuth] = React.useState({});
 
   function getNewsRequest(gameId: string): AxiosRequestConfig {
     const config: AxiosRequestConfig = {
@@ -61,13 +63,17 @@ const News: React.FC = () => {
       },
       headers: {
         'Content-Type': 'application/json'
+        //'Access-Control-Request-Method': 'GET',
+        //'Origin': 'http://localhost:3000'
       }
     };
 
     return config;
   }
 
-  useApiCall({ apiRequest: newsRequest, setData: setNews, deps: [newsRequest] });
+  useAwsAuth({ apiRequest: newsRequest, setData: setNewsRequestWithAuth });
+  useApiCall({ apiRequest: newsRequestWithAuth, setData: setNews });
+  //useApiCall({ apiRequest: newsRequest, setData: setNews });
 
   return (
     <section className="gutter-lg">
