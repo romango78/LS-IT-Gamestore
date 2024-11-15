@@ -66,6 +66,7 @@ const useApiCall = (props: UseApiCallProps) => {
     };
 
     callApi();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiRequest, setData, setIsLoading]);
 
   React.useEffect(() => {

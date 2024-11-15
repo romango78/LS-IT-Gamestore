@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import { AxiosRequestConfig } from 'axios';
-import useApiCall from './hooks/useApiCall';
+import useApiCall from '../hooks/useApiCall';
 
 import './../assets/styles/common.css';
-import useAwsAuth from './hooks/useAwsAuth';
+import useAwsAuth from '../hooks/useAwsAuth';
 
 
 const News: React.FC = () => {
@@ -63,8 +63,6 @@ const News: React.FC = () => {
       },
       headers: {
         'Content-Type': 'application/json'
-        //'Access-Control-Request-Method': 'GET',
-        //'Origin': 'http://localhost:3000'
       }
     };
 
@@ -73,7 +71,6 @@ const News: React.FC = () => {
 
   useAwsAuth({ apiRequest: newsRequest, setData: setNewsRequestWithAuth });
   useApiCall({ apiRequest: newsRequestWithAuth, setData: setNews });
-  //useApiCall({ apiRequest: newsRequest, setData: setNews });
 
   return (
     <section className="gutter-lg">
