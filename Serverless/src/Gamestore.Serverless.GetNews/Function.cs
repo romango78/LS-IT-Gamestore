@@ -14,7 +14,7 @@ public class Function
     private const string GameIdParam = "gameId";
 
     /// <summary>
-    /// Example function that processes an API Gateway request and returns a response
+    /// Get news about game by specified id
     /// </summary>
     /// <param name="request">The API Gateway request.</param>
     /// <param name="context">Lambda execution context.</param>
@@ -65,7 +65,7 @@ public class Function
         }
 
         // Create response
-        var response = new APIGatewayProxyResponse
+        return new APIGatewayProxyResponse
         {
             StatusCode = (int)statusCode,
             Body = responseBody,
@@ -78,7 +78,5 @@ public class Function
                 { "Content-Type", "text/plain" }
             }
         };
-
-        return response;
     }
 }
