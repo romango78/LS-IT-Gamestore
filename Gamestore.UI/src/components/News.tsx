@@ -49,12 +49,23 @@ const News: React.FC = () => {
   //  return () => clearInterval(intervalAppIdChaging);
   //}, []);
 
-  const [gameId, setGameId] = React.useState('440');
-  const [news, setNews] = React.useState({ 'game-id': '', 'source': '', 'title': '', 'contents': '', 'read-more': '' });
-  const [newsRequest, setNewsRequest] = React.useState(getNewsRequest(gameId));
-  const [newsRequestWithAuth, setNewsRequestWithAuth] = React.useState({});
+  function getAvailableGamesRequest(): AxiosRequestConfig {
+    const config: AxiosRequestConfig = {
+      url: "https://ad49xs3450.execute-api.us-east-1.amazonaws.com/availablegames",
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
 
-  function getNewsRequest(gameId: string): AxiosRequestConfig {
+    return config;
+  }
+
+  function getNewsRequest(gameId: string | null): AxiosRequestConfig | null {
+    if (gameId === null) {
+      return null;
+    }
+
     const config: AxiosRequestConfig = {
       url: "https://ad49xs3450.execute-api.us-east-1.amazonaws.com/news",
       method: "GET",
@@ -69,6 +80,30 @@ const News: React.FC = () => {
     return config;
   }
 
+  const [availableGames, setAvailableGames] = React.useState([{ 'game-id': '', 'name': '' }]);
+  const [availableGamesRequest] = React.useState(getAvailableGamesRequest());
+  const [availableGamesRequestWithAuth, setAvailableGamesRequestWithAuth] = React.useState({});
+  const [newsRequest, setNewsRequest] = React.useState(getNewsRequest(null));
+  const [newsRequestWithAuth, setNewsRequestWithAuth] = React.useState({});
+  const [news, setNews] = React.useState({ 'game-id': '', 'source': '', 'title': '', 'contents': '', 'read-more': '' });
+
+  useAwsAuth({ apiRequest: availableGamesRequest, setData: setAvailableGamesRequestWithAuth });
+  useApiCall({ apiRequest: availableGamesRequestWithAuth, setData: setAvailableGames });  
+    
+  React.useEffect(() => {
+    const intervalAppIdChaging = setInterval(() => {
+      const count = availableGames.length;
+      const index = Math.floor(Math.random() * count);
+      const gameId = availableGames[index]['game-id'];
+
+      console.info(`Selected game '${gameId}':'${index}' for downloading News`);
+      setNewsRequest(getNewsRequest(gameId));
+    }, 20000);
+
+    return () => clearInterval(intervalAppIdChaging);
+  }, [availableGames]); 
+
+  
   useAwsAuth({ apiRequest: newsRequest, setData: setNewsRequestWithAuth });
   useApiCall({ apiRequest: newsRequestWithAuth, setData: setNews });
 

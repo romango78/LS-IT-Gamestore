@@ -3,16 +3,11 @@ import { AxiosRequestConfig } from 'axios';
 import moment from 'moment';
 import crypto from 'crypto-js';
 
-//import { SignatureV4 } from '@smithy/signature-v4';
-//import { HttpRequest, IHttpRequest } from '@smithy/protocol-http';
-//import { AwsCredentialIdentity, HeaderBag } from '@smithy/types';
-//import { Sha256 } from "@aws-crypto/sha256-js";
-
 const service = 'execute-api';
 const region = process.env.REACT_APP_AWS_REGION;
 
 export interface UseAwsAuthProps {
-  apiRequest: AxiosRequestConfig,
+  apiRequest: AxiosRequestConfig | null | undefined,
   setData: React.Dispatch<React.SetStateAction<any>>
 }
 
@@ -103,7 +98,7 @@ const addSigV4Auth = (requestConfig: AxiosRequestConfig) => {
   const updatedHeaders = getSignedHeaders(awsCredentials, region, service, requestConfig);
 
   requestConfig.headers = updatedHeaders;
-
+  
   return requestConfig;
 }
 
@@ -111,6 +106,9 @@ const validateProps = (props: UseAwsAuthProps) => {
   const {
     apiRequest
   } = props;
+
+  if (!apiRequest)
+    return false;
 
   if (apiRequest.url === undefined)
     return false;
@@ -129,13 +127,16 @@ const useAwsAuth = (props: UseAwsAuthProps) => {
 
   const callback = React.useCallback(() => {
     // Validation props
-    if (!validateProps(props))
+    if (!validateProps(props)) {
+      console.info("The 'useAwsAuth' was not invoked due the validation failure.");
       return;
+    }
 
-    setData(addSigV4Auth(apiRequest));
-    
+    console.info(`Invoked 'useAwsAuth' hook for ${apiRequest!.url}`);
+    setData(addSigV4Auth(apiRequest!));    
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiRequest, setData]);
+  }, [apiRequest]);
 
   React.useEffect(() => {
     callback();
