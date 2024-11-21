@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Gamestore.Serverless.GetAvailableGames.Models
+namespace Gamestore.DataProvider.Models
 {
-    internal record AvailableGame
+    public record AvailableGame
     {
         [JsonPropertyName("game-id")]
         public string? GameId { get; set; }
