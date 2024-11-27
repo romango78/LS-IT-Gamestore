@@ -21,8 +21,8 @@ public class Functions
         _dataProvider = dataProvider;
     }
 
-    [LambdaFunction(MemorySize = 128, Timeout = 60)]
-    [HttpApi(LambdaHttpMethod.Get, "/get-available-games")]
+    [LambdaFunction(ResourceName = "GetAvailableGames", MemorySize = 128, Timeout = 60)]
+    [HttpApi(LambdaHttpMethod.Get, "/availablegames")]
     public async Task<IHttpResult> GetAvailableGamesAsync(ILambdaContext context)
     {
         // Log the incoming request
@@ -40,5 +40,4 @@ public class Functions
             .AddHeader("Access-Control-Max-Age", "60")
             .AddHeader("Content-Type", "application/json");
     }
-
 }

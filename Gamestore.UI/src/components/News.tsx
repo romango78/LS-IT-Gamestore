@@ -1,11 +1,14 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import { AxiosRequestConfig } from 'axios';
+import useAwsAuth from '../hooks/useAwsAuth';
 import useApiCall from '../hooks/useApiCall';
 
 import './../assets/styles/common.css';
-import useAwsAuth from '../hooks/useAwsAuth';
 
+const aws_region = process.env.REACT_APP_AWS_REGION;
+const aws_httpapi_ref = process.env.REACT_APP_AWS_HTTPAPI_REF;
+const aws_backend_url = `https://${aws_httpapi_ref}.execute-api.${aws_region}.amazonaws.com`
 
 const News: React.FC = () => {
   //const [appId, setAppId] = React.useState(240);
@@ -51,7 +54,8 @@ const News: React.FC = () => {
 
   function getAvailableGamesRequest(): AxiosRequestConfig {
     const config: AxiosRequestConfig = {
-      url: "https://ad49xs3450.execute-api.us-east-1.amazonaws.com/availablegames",
+      baseURL: aws_backend_url,
+      url: "/availablegames",      
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
@@ -85,7 +89,7 @@ const News: React.FC = () => {
   const [availableGamesRequestWithAuth, setAvailableGamesRequestWithAuth] = React.useState({});
   const [newsRequest, setNewsRequest] = React.useState(getNewsRequest(null));
   const [newsRequestWithAuth, setNewsRequestWithAuth] = React.useState({});
-  const [news, setNews] = React.useState({ 'game-id': '', 'source': '', 'title': '', 'contents': '', 'read-more': '' });
+  const [news, setNews] = React.useState({ 'game-id': '', 'source': '', 'title': 'News', 'contents': 'Comming soon...', 'read-more': '' });
 
   useAwsAuth({ apiRequest: availableGamesRequest, setData: setAvailableGamesRequestWithAuth });
   useApiCall({ apiRequest: availableGamesRequestWithAuth, setData: setAvailableGames });  

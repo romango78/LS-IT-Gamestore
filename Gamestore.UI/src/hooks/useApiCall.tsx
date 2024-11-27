@@ -52,7 +52,7 @@ const useApiCall = (props: UseApiCallProps) => {
 
       await axios(apiRequest!)
         .then(response => {
-          console.info(`Invoked 'useApiCall' hook for ${apiRequest!.url}`);
+          console.info(`Invoked 'useApiCall' hook for ${apiRequest?.baseURL ?? ''}${apiRequest?.url ?? ''}`);
           setData(response.data);
         })
         .catch(reason => {

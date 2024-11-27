@@ -21,9 +21,17 @@ const createHash = (input: any) => {
 }
 
 const getSignedHeaders = (credentials: any, region: any, service: any, axiosConfig: AxiosRequestConfig) => {
-  const { url, method, headers, params, data } = axiosConfig;
-  const host = new URL(url!).hostname;
-  const path = new URL(url!).pathname;
+  const { baseURL, url, method, headers, params, data } = axiosConfig;
+
+  let host;
+  let path;
+  if (!baseURL) {
+    host = new URL(url!).hostname;
+    path = new URL(url!).pathname;
+  } else {
+    host = new URL(baseURL! + url!).hostname;
+    path = new URL(baseURL! + url!).pathname;
+  }  
 
   // 0. Validate Request
   if (!method || !host) {
@@ -132,7 +140,7 @@ const useAwsAuth = (props: UseAwsAuthProps) => {
       return;
     }
 
-    console.info(`Invoked 'useAwsAuth' hook for ${apiRequest!.url}`);
+    console.info(`Invoked 'useAwsAuth' hook for ${apiRequest?.baseURL ?? ''}${apiRequest?.url ?? ''}`);
     setData(addSigV4Auth(apiRequest!));    
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

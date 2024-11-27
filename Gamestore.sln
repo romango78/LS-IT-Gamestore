@@ -6,14 +6,17 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "gamestore.ui", "Gamestore.UI\gamestore.ui.esproj", "{493045DD-18D0-41F7-826E-791012424A75}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serverless", "Serverless", "{5DAA0C75-CDEF-4F60-ACC3-A9EB1D5AA31A}"
+	ProjectSection(SolutionItems) = preProject
+		Serverless\README.md = Serverless\README.md
+		Serverless\samconfig.toml = Serverless\samconfig.toml
+		Serverless\template.yaml = Serverless\template.yaml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2ABD38DC-456F-4B77-A2A0-143D1810E11D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.Serverless.GetNews", "Serverless\src\Gamestore.Serverless.GetNews\Gamestore.Serverless.GetNews.csproj", "{83F3A16C-7D03-46B7-B497-B5C9FF441957}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2DAF3451-BE8A-410D-B7E5-A28F209BF28A}"
-EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "GamestoreLambdas", "Serverless\src\PythonApplication1\GamestoreLambdas.pyproj", "{F1B85831-3457-4841-9377-55CD6360D594}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.Serverless", "Serverless\src\Gamestore.Serverless\Gamestore.Serverless.csproj", "{F554E166-8B44-4555-A499-5746F33BAB69}"
 EndProject
@@ -28,6 +31,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{1F74FEA3-3D3F-4AB7-A557-590BD6F6B11D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.DataProvider.Steam.Tests", "Serverless\test\Gamestore.DataProvider.Steam.Tests\Gamestore.DataProvider.Steam.Tests.csproj", "{4D7380A8-C544-4CB8-A2AE-789E15E28621}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{59BFDA72-8350-47C3-A131-4E2C26D13336}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,8 +50,6 @@ Global
 		{83F3A16C-7D03-46B7-B497-B5C9FF441957}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83F3A16C-7D03-46B7-B497-B5C9FF441957}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83F3A16C-7D03-46B7-B497-B5C9FF441957}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F1B85831-3457-4841-9377-55CD6360D594}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F1B85831-3457-4841-9377-55CD6360D594}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F554E166-8B44-4555-A499-5746F33BAB69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F554E166-8B44-4555-A499-5746F33BAB69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F554E166-8B44-4555-A499-5746F33BAB69}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,7 +78,6 @@ Global
 		{2ABD38DC-456F-4B77-A2A0-143D1810E11D} = {5DAA0C75-CDEF-4F60-ACC3-A9EB1D5AA31A}
 		{83F3A16C-7D03-46B7-B497-B5C9FF441957} = {2ABD38DC-456F-4B77-A2A0-143D1810E11D}
 		{2DAF3451-BE8A-410D-B7E5-A28F209BF28A} = {5DAA0C75-CDEF-4F60-ACC3-A9EB1D5AA31A}
-		{F1B85831-3457-4841-9377-55CD6360D594} = {2ABD38DC-456F-4B77-A2A0-143D1810E11D}
 		{F554E166-8B44-4555-A499-5746F33BAB69} = {2ABD38DC-456F-4B77-A2A0-143D1810E11D}
 		{836462B3-CB7F-4D72-8FB4-E46EF41CFCA7} = {2ABD38DC-456F-4B77-A2A0-143D1810E11D}
 		{342CF766-0784-4838-9E2D-6200FA497DAF} = {836462B3-CB7F-4D72-8FB4-E46EF41CFCA7}

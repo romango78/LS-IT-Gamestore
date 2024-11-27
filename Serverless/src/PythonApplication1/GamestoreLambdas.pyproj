@@ -5,7 +5,8 @@
     <ProjectGuid>f1b85831-3457-4841-9377-55cd6360d594</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>PythonApplication1.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,7 +24,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="gamestore-getnews\lambda_function.py" />
-    <Compile Include="PythonApplication1.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="gamestore-getnews\" />

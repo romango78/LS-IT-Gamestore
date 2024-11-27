@@ -4,53 +4,75 @@
 # The AWSTemplateFormatVersion identifies the capabilities of the template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
 AWSTemplateFormatVersion: 2010-09-09
-Description: >-
-  lp-is-gamestore
+Description: An AWS Serverless Application infrastructure for lp-is-gamestore project.
 
 # Transform section specifies one or more macros that AWS CloudFormation uses to process your template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
 Transform:
 - AWS::Serverless-2016-10-31
 
+# Properties that are common to all your serverless functions, APIs, and simple tables. 
+# All the AWS::Serverless::Function, AWS::Serverless::Api, and AWS::Serverless::SimpleTable resources 
+# inherit the properties that are defined in the Globals section.
+Globals:
+  HttpApi:
+    Auth:
+      DefaultAuthorizer: AWS_IAM
+      EnableIamAuthorizer: true
+    CorsConfiguration:
+      AllowOrigins:
+      - "*"
+      AllowHeaders:
+      - content-type
+      - authorization
+      - x-amz-content-sha256
+      - x-amz-date
+      - access-control-request-method
+      - origin
+      ExposeHeaders:
+      - "*"
+      AllowMethods:
+      - GET
+      - OPTIONS
+      MaxAge: 600
+      AllowCredentials: false
+
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
+
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-
-  # This is a Lambda function config associated with the project: Gamestore.Serverless
-  GamestoreServerlessFunctionsGetAvailableGamesAsyncGenerated:
+  # The Lambda function configs associated with the project: Gamestore.Serverless
+  GamestoreServerlessGetAvailableGames:
     Type: AWS::Serverless::Function
     Metadata:
       Tool: Amazon.Lambda.Annotations
       SyncedEvents:
-        - RootGet
+      - RootGet
       SyncedEventProperties:
         RootGet:
-          - Path
-          - Method
+        - Path
+        - Method
     Properties:
+      Description: Get a list of available games from the Gamestore sources.
       Runtime: dotnet8
-      CodeUri: ./Serverless/src/Gamestore.Serverless/
+      CodeUri: ./src/Gamestore.Serverless/
       MemorySize: 128
       Timeout: 60
       Policies:
-        # Give Lambda basic execution Permission to the helloFromLambda
-        - AWSLambdaBasicExecutionRole
+      - AWSLambdaBasicExecutionRole
       PackageType: Zip
       Handler: Gamestore.Serverless::Gamestore.Serverless.Functions_GetAvailableGamesAsync_Generated::GetAvailableGamesAsync
       Events:
         RootGet:
           Type: HttpApi
           Properties:
-            Path: /get-available-games
+            Path: /availablegames
             Method: GET
-      Architectures:
-        - x86_64
-      Description: A Lambda function that returns a static string.
- 
+
 Outputs:
   ApiURL:
-    Description: API endpoint URL for Prod environment
+    Description: API endpoint URL
     Value:
-      Fn::Sub: https://ad49xs3450.execute-api.us-east-1.amazonaws.com/
+      Fn::Sub: https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/
