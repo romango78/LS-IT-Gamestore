@@ -71,7 +71,8 @@ const News: React.FC = () => {
     }
 
     const config: AxiosRequestConfig = {
-      url: "https://ad49xs3450.execute-api.us-east-1.amazonaws.com/news",
+      baseURL: aws_backend_url,
+      url: "/news",
       method: "GET",
       params: {
         gameId: gameId

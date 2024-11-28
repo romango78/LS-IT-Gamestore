@@ -1,4 +1,4 @@
-﻿using Gamestore.DataProvider.Models;
+﻿using Gamestore.DataProvider.Abstractions.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

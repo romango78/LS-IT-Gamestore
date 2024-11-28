@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Gamestore.Serverless.GetNews.Models
+namespace Gamestore.DataProvider.Abstractions.Models
 {
-    internal record GameInfo
+    public record GameNews
     {
         [JsonPropertyName("game-id")]
         public string? GameId { get; set; }
@@ -17,6 +17,6 @@ namespace Gamestore.Serverless.GetNews.Models
         public string? Contents { get; set; }
 
         [JsonPropertyName("read-more")]
-        public string? ReadMore { get; set; }
+        public Uri? ReadMoreLink { get; set; }
     }
 }

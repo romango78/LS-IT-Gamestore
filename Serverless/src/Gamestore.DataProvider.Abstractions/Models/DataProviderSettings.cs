@@ -1,4 +1,4 @@
-﻿namespace Gamestore.DataProvider.Models
+﻿namespace Gamestore.DataProvider.Abstractions.Models
 {
     public record DataProviderSettings
     {

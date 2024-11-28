@@ -44,6 +44,7 @@ Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
   # The Lambda function configs associated with the project: Gamestore.Serverless
+  # The Lambda function returns a list of available games that are collected from different sources
   GamestoreServerlessGetAvailableGames:
     Type: AWS::Serverless::Function
     Metadata:
@@ -71,6 +72,34 @@ Resources:
             Path: /availablegames
             Method: GET
 
+  # The Lambda function configs associated with the project: Gamestore.Serverless
+  # The Lambda function returns a news for specified game (by Id)
+  GamestoreServerlessGetNews:
+    Type: AWS::Serverless::Function
+    Metadata: 
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+      - RootGet
+      SyncedEventProperties:
+        RootGet:
+        - Path
+        - Method
+    Properties:
+      Description: Get a news for specified game (by Id).
+      Runtime: dotnet8
+      CodeUri: ./src/Gamestore.Serverless/
+      MemorySize: 128
+      Timeout: 60
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      PackageType: Zip
+      Handler: Gamestore.Serverless::Gamestore.Serverless.Functions_GetNewsAsync_Generated::GetNewsAsync
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /news
+            Method: GET
 Outputs:
   ApiURL:
     Description: API endpoint URL

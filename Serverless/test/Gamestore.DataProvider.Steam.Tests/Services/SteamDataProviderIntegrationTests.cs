@@ -1,5 +1,5 @@
 using FluentAssertions;
-using Gamestore.DataProvider.Models;
+using Gamestore.DataProvider.Abstractions.Models;
 using Gamestore.DataProvider.Steam.Extensions;
 using Gamestore.DataProvider.Steam.Services;
 using Microsoft.Extensions.Configuration;

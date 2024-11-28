@@ -1,7 +1,8 @@
-using Gamestore.DataProvider.Models;
-using Gamestore.DataProvider.Services;
+using Gamestore.DataProvider.Abstractions.Models;
+using Gamestore.DataProvider.Abstractions.Services;
 using Gamestore.DataProvider.Steam.Extensions;
 using Gamestore.DataProvider.Steam.Services;
+using Gamestore.Serverless.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,5 +32,15 @@ public class Startup
         services.AddSteamDependencies(configuration);
 
         services.AddScoped<IDataProvider, SteamDataProvider>();
+        services.AddKeyedScoped<IDataProvider>(nameof(CompositeDataProvider), (serviceProvider, _) =>
+        {
+            var compositeDataProvider = new CompositeDataProvider();
+
+            foreach (var dataProvider in serviceProvider.GetServices<IDataProvider>())
+            {
+                compositeDataProvider.RegisterDataProvider(dataProvider);
+            }
+            return compositeDataProvider;
+        });
     }
 }
