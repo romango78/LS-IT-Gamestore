@@ -29,16 +29,28 @@ public class Functions
     public async Task<IHttpResult> GetAvailableGamesAsync(ILambdaContext context)
     {
         // Log the incoming request
-        context.Logger.LogInformation($"Processing request data for request {context.AwsRequestId}");
+        context.Logger.LogInformation(
+            $"Start to process the request '{context.AwsRequestId}' to {context.FunctionName} function (ver. {context.FunctionVersion}).");
 
-        var availableGameList = await _dataProvider.GetAvailableGameListAsync(CancellationToken.None)
-            .Where(m => !string.IsNullOrWhiteSpace(m.Name))
-            .OrderByDescending(m => m.GameId)
-            //.Distinct()
-            .Take(30).ToListAsync().ConfigureAwait(false);
+        try
+        {
+            var availableGameList = await _dataProvider.GetAvailableGameListAsync(CancellationToken.None)
+                .Where(m => !string.IsNullOrWhiteSpace(m.Name))
+                .OrderByDescending(m => m.GameId)
+                //.Distinct()
+                .Take(30).ToListAsync().ConfigureAwait(false);
 
-        return HttpResults.Ok(availableGameList)
-            .AddCorsHeaders().AddJsonContentType();
+            context.Logger.LogInformation(
+                $"The request '{context.AwsRequestId}' of {context.FunctionName} function (ver. {context.FunctionVersion}) completed.");
+
+            return HttpResults.Ok(availableGameList)
+                .AddCorsHeaders().AddJsonContentType();
+        }
+        catch (Exception e)
+        {
+            context.Logger.LogError(e,$"The request '{context.AwsRequestId}' of {context.FunctionName} function (ver. {context.FunctionVersion}) failed due an error.");
+            return HttpResults.InternalServerError(e.Message);
+        }
     }
 
     [LambdaFunction(ResourceName = "GamestoreServerlessGetNews", MemorySize = 128, Timeout = 60)]
@@ -46,7 +58,8 @@ public class Functions
     public async Task<IHttpResult> GetNewsAsync([FromQuery] string gameId, ILambdaContext context)
     {
         // Log the incoming request
-        context.Logger.LogInformation($"Processing request data for request {context.AwsRequestId}");
+        context.Logger.LogInformation(
+            $"Start to process the request '{context.AwsRequestId}' to {context.FunctionName} function (ver. {context.FunctionVersion}).");
 
         if (string.IsNullOrWhiteSpace(gameId))
         {
@@ -54,17 +67,26 @@ public class Functions
                 .AddCorsHeaders().AddTextContentType();
         }
 
-        var gameNews = await _dataProvider.GetGameNewsAsync(gameId, CancellationToken.None).ConfigureAwait(false);
-
-        if (gameNews == null)
+        try
         {
-            return HttpResults.NotFound($"The game with id '{gameId}' is not found.")
-                .AddCorsHeaders().AddTextContentType();
+            var gameNews = await _dataProvider.GetGameNewsAsync(gameId, CancellationToken.None).ConfigureAwait(false);
+
+            context.Logger.LogInformation(
+                $"The request '{context.AwsRequestId}' of {context.FunctionName} function (ver. {context.FunctionVersion}) completed.");
+
+            if (gameNews == null)
+            {
+                return HttpResults.NotFound($"The game with id '{gameId}' is not found.")
+                    .AddCorsHeaders().AddTextContentType();
+            }
+
+            return HttpResults.Ok(gameNews)
+                .AddCorsHeaders().AddJsonContentType();
         }
-
-        return HttpResults.Ok(gameNews)
-            .AddCorsHeaders().AddJsonContentType();
+        catch (Exception e)
+        {
+            context.Logger.LogError(e, $"The request '{context.AwsRequestId}' of {context.FunctionName} function (ver. {context.FunctionVersion}) failed due an error.");
+            return HttpResults.InternalServerError(e.Message);
+        }
     }
-
-
 }
