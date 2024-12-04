@@ -2,6 +2,7 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Annotations.APIGateway;
 using Gamestore.DataProvider.Abstractions.Services;
+using Gamestore.Serverless.Extensions;
 using Gamestore.Serverless.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,11 +38,7 @@ public class Functions
             .Take(30).ToListAsync().ConfigureAwait(false);
 
         return HttpResults.Ok(availableGameList)
-            .AddHeader("Access-Control-Allow-Headers", "Content-Type")
-            .AddHeader("Access-Control-Allow-Origin", "*")
-            .AddHeader("Access-Control-Allow-Methods", "GET, OPTIONS")
-            .AddHeader("Access-Control-Max-Age", "60")
-            .AddHeader("Content-Type", "application/json");
+            .AddCorsHeaders().AddJsonContentType();
     }
 
     [LambdaFunction(ResourceName = "GamestoreServerlessGetNews", MemorySize = 128, Timeout = 60)]
@@ -54,11 +51,7 @@ public class Functions
         if (string.IsNullOrWhiteSpace(gameId))
         {
             return HttpResults.BadRequest("Invalid value for 'gameId'")
-                .AddHeader("Access-Control-Allow-Headers", "Content-Type")
-                .AddHeader("Access-Control-Allow-Origin", "*")
-                .AddHeader("Access-Control-Allow-Methods", "GET, OPTIONS")
-                .AddHeader("Access-Control-Max-Age", "60")
-                .AddHeader("Content-Type", "application/json");
+                .AddCorsHeaders().AddTextContentType();
         }
 
         var gameNews = await _dataProvider.GetGameNewsAsync(gameId, CancellationToken.None).ConfigureAwait(false);
@@ -66,18 +59,12 @@ public class Functions
         if (gameNews == null)
         {
             return HttpResults.NotFound($"The game with id '{gameId}' is not found.")
-                .AddHeader("Access-Control-Allow-Headers", "Content-Type")
-                .AddHeader("Access-Control-Allow-Origin", "*")
-                .AddHeader("Access-Control-Allow-Methods", "GET, OPTIONS")
-                .AddHeader("Access-Control-Max-Age", "60")
-                .AddHeader("Content-Type", "application/json");
+                .AddCorsHeaders().AddTextContentType();
         }
 
         return HttpResults.Ok(gameNews)
-            .AddHeader("Access-Control-Allow-Headers", "Content-Type")
-            .AddHeader("Access-Control-Allow-Origin", "*")
-            .AddHeader("Access-Control-Allow-Methods", "GET, OPTIONS")
-            .AddHeader("Access-Control-Max-Age", "60")
-            .AddHeader("Content-Type", "application/json");
+            .AddCorsHeaders().AddJsonContentType();
     }
+
+
 }

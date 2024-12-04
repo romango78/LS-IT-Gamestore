@@ -11,47 +11,6 @@ const aws_httpapi_ref = process.env.REACT_APP_AWS_HTTPAPI_REF;
 const aws_backend_url = `https://${aws_httpapi_ref}.execute-api.${aws_region}.amazonaws.com`
 
 const News: React.FC = () => {
-  //const [appId, setAppId] = React.useState(240);
-  //const [appList, setAppList] = React.useState([]);
-
-  //function getAppList(): Promise<any> {
-  //  //const headers = new Headers();
-  //  //headers.append("Access-Control-Request-Method", "GET");
-  //  //headers.append("Access-Control-Request-Headers", "Content-Type, Authorization");
-  //  //headers.append("Content-Type", "application/json");
-  //  // http://api.steampowered.com/ISteamApps/GetAppList/v2
-  //  const request = new Request("https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=440&count=1&maxlength=1000&format=json", {
-  //    method: "GET",
-  //    mode: "no-cors",
-  //    headers: {
-  //      "Access-Control-Allow-Origin": "*",
-  //      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-  //      "Content-Type": "application/json"
-  //    }
-  //  });
-
-  //  return fetch(request);
-  //  //return axios.get("http://api.steampowered.com/ISteamApps/GetAppList/v2",
-  //  //  {
-  //  //    headers: {
-  //  //      'Access-Control-Allow-Origin': '*',
-  //  //      'Access-Control-Allow-Methods': 'GET,OPTIONS',
-  //  //      'Content-Type': 'application/json'
-  //  //    }
-  //  //  })
-  //  //  .then(response => response.data.json())
-  //}
-
-  //useApiCall({ apiCall: getAppList, setData: setAppList });
-
-  //React.useEffect(() => {
-  //  const intervalAppIdChaging = setInterval(() => {
-  //    setAppId(v => v + 1);
-  //  }, 60000);
-
-  //  return () => clearInterval(intervalAppIdChaging);
-  //}, []);
-
   function getAvailableGamesRequest(): AxiosRequestConfig {
     const config: AxiosRequestConfig = {
       baseURL: aws_backend_url,

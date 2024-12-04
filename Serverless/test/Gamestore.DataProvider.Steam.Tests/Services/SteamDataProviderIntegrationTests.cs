@@ -31,7 +31,7 @@ namespace Gamestore.DataProvider.Steam.Tests.Services
         }
 
         [Test]
-        public async Task ShouldGetTenFirstGames_FromSteamSource()
+        public async Task GetAvailableGameList_ShouldGetTenFirstGames_FromSteamSource()
         {
             // Arrange
 
@@ -50,6 +50,45 @@ namespace Gamestore.DataProvider.Steam.Tests.Services
 
             // Asserts
             result.Should().NotBeEmpty().And.HaveCount(10);
+        }
+
+        [Test]
+        public async Task GetNews_ShouldGetNews_ForSpecifiedGameById()
+        {
+            // Arrange
+            const string GameId = "EXT_STEAM_440";
+
+            var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var options = _serviceProvider.GetRequiredService<IOptions<DataProviderSettings>>();
+
+            var sut = new SteamDataProvider(httpClientFactory, options);
+
+            // Act
+            var result = await sut.GetGameNewsAsync(GameId, CancellationToken.None).ConfigureAwait(false);
+
+            // Asserts
+            result.Should().NotBeNull();
+            result!.GameId.Should().Be(GameId);
+        }
+
+        [TestCase("123")]
+        [TestCase("EXT_STEAM_")]
+        [TestCase("EXT_STEAM_AB")]
+        [TestCase("EXT_STEAM_123AB")]
+        [TestCase("EXT_STEAM_AB123")]
+        public async Task GetNews_ShouldReturnNull_WhenIdIsNotRelatedToSteam(string gameId)
+        {
+            // Arrange
+            var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var options = _serviceProvider.GetRequiredService<IOptions<DataProviderSettings>>();
+
+            var sut = new SteamDataProvider(httpClientFactory, options);
+
+            // Act
+            var result = await sut.GetGameNewsAsync(gameId, CancellationToken.None).ConfigureAwait(false);
+
+            // Asserts
+            result.Should().BeNull();
         }
     }
 }
