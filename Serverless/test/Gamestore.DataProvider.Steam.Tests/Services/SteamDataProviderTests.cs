@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Gamestore.DataProvider.Abstractions.Models;
 using Gamestore.DataProvider.Steam.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 
@@ -17,13 +18,14 @@ public class SteamDataProviderTests
     {
         // Arrange
         var httpClientFactory = Mock.Of<IHttpClientFactory>();
+        var logger = NullLogger<SteamDataProvider>.Instance;
 
         var options = Mock.Of<IOptions<DataProviderSettings>>();
         Mock.Get(options)
             .Setup(m => m.Value)
             .Returns(new DataProviderSettings());
 
-        var sut = new SteamDataProvider(httpClientFactory, options);
+        var sut = new SteamDataProvider(httpClientFactory, logger, options);
 
         // Act
         var result = await sut.GetGameNewsAsync(gameId, CancellationToken.None).ConfigureAwait(false);

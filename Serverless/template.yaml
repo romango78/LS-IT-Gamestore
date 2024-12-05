@@ -36,6 +36,11 @@ Globals:
       - OPTIONS
       MaxAge: 600
       AllowCredentials: false
+  Function:
+    Environment:
+      Variables:
+        POWERTOOLS_SERVICE_NAME: powertools-dotnet-logging-sample
+        POWERTOOLS_LOG_LEVEL: Debug
 
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html

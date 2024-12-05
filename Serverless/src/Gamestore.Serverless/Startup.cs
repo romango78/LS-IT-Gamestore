@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Gamestore.DataProvider.Abstractions.Models;
 using Gamestore.DataProvider.Abstractions.Services;
 using Gamestore.DataProvider.Steam.Extensions;
@@ -5,6 +6,7 @@ using Gamestore.DataProvider.Steam.Services;
 using Gamestore.Serverless.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Gamestore.Serverless;
 
@@ -23,12 +25,13 @@ public class Startup
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
 
         services.AddOptions();
         services.Configure<DataProviderSettings>(configuration.GetSection(nameof(DataProviderSettings)));
+
         services.AddSteamDependencies(configuration);
 
         services.AddScoped<IDataProvider, SteamDataProvider>();
@@ -41,6 +44,12 @@ public class Startup
                 compositeDataProvider.RegisterDataProvider(dataProvider);
             }
             return compositeDataProvider;
+        });
+
+        services.AddLogging(builder =>
+        {
+            builder.AddConfiguration(configuration.GetSection("Logging"))
+                .AddJsonConsole();
         });
     }
 }

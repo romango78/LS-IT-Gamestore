@@ -4,6 +4,7 @@ using Gamestore.DataProvider.Steam.Extensions;
 using Gamestore.DataProvider.Steam.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
 namespace Gamestore.DataProvider.Steam.Tests.Services
@@ -36,9 +37,10 @@ namespace Gamestore.DataProvider.Steam.Tests.Services
             // Arrange
 
             var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var logger = NullLogger<SteamDataProvider>.Instance;
             var options = _serviceProvider.GetRequiredService<IOptions<DataProviderSettings>>();
-
-            var sut = new SteamDataProvider(httpClientFactory, options);
+            
+            var sut = new SteamDataProvider(httpClientFactory, logger, options);
 
             // Act
 
@@ -59,9 +61,10 @@ namespace Gamestore.DataProvider.Steam.Tests.Services
             const string GameId = "EXT_STEAM_440";
 
             var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var logger = NullLogger<SteamDataProvider>.Instance;
             var options = _serviceProvider.GetRequiredService<IOptions<DataProviderSettings>>();
 
-            var sut = new SteamDataProvider(httpClientFactory, options);
+            var sut = new SteamDataProvider(httpClientFactory, logger, options);
 
             // Act
             var result = await sut.GetGameNewsAsync(GameId, CancellationToken.None).ConfigureAwait(false);
@@ -80,9 +83,10 @@ namespace Gamestore.DataProvider.Steam.Tests.Services
         {
             // Arrange
             var httpClientFactory = _serviceProvider.GetRequiredService<IHttpClientFactory>();
+            var logger = NullLogger<SteamDataProvider>.Instance;
             var options = _serviceProvider.GetRequiredService<IOptions<DataProviderSettings>>();
 
-            var sut = new SteamDataProvider(httpClientFactory, options);
+            var sut = new SteamDataProvider(httpClientFactory, logger, options);
 
             // Act
             var result = await sut.GetGameNewsAsync(gameId, CancellationToken.None).ConfigureAwait(false);

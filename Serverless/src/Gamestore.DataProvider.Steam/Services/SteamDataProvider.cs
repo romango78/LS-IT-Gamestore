@@ -5,6 +5,8 @@ using Gamestore.DataProvider.Abstractions.Extensions;
 using Gamestore.DataProvider.Abstractions.Models;
 using Gamestore.DataProvider.Abstractions.Services;
 using Gamestore.DataProvider.Steam.Models;
+using Gamestore.DataProvider.Steam.Properties;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Gamestore.DataProvider.Steam.Services
@@ -20,14 +22,18 @@ namespace Gamestore.DataProvider.Steam.Services
 
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly DataProviderSettings _settings;
+        private readonly ILogger<SteamDataProvider> _logger;
 
-        public SteamDataProvider(IHttpClientFactory clientFactory, IOptions<DataProviderSettings> options)
+        public SteamDataProvider(IHttpClientFactory clientFactory, ILogger<SteamDataProvider> logger,
+            IOptions<DataProviderSettings> options)
         {
             ArgumentNullException.ThrowIfNull(clientFactory);
+            ArgumentNullException.ThrowIfNull(logger);
             ArgumentNullException.ThrowIfNull(options);
             ArgumentNullException.ThrowIfNull(options.Value);
 
             _settings = options.Value;
+            _logger = logger;
             _httpClientFactory = clientFactory;
         }
 
@@ -60,6 +66,7 @@ namespace Gamestore.DataProvider.Steam.Services
             var match = regex.Match(gameId);
             if (!match.Success)
             {
+                _logger.LogDebug(ErrorsRes.GameIdIsNotMatch, gameId);
                 return null;
             }
 
@@ -80,6 +87,7 @@ namespace Gamestore.DataProvider.Steam.Services
             var news = root?.Root?.NewsItems?.FirstOrDefault();
             if (news is null)
             {
+                _logger.LogDebug(ErrorsRes.GameNotFound, gameId);
                 return null;
             }
 

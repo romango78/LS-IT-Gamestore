@@ -3,8 +3,10 @@ using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Annotations.APIGateway;
 using Gamestore.DataProvider.Abstractions.Services;
 using Gamestore.Serverless.Extensions;
+using Gamestore.Serverless.Properties;
 using Gamestore.Serverless.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -16,21 +18,30 @@ namespace Gamestore.Serverless;
 public class Functions
 {
     private readonly IDataProvider _dataProvider;
+    private readonly ILogger<Functions> _logger;
 
-    public Functions([FromKeyedServices(nameof(CompositeDataProvider))]IDataProvider dataProvider)
+    public Functions([FromKeyedServices(nameof(CompositeDataProvider))] IDataProvider dataProvider,
+        ILogger<Functions> logger)
     {
         ArgumentNullException.ThrowIfNull(dataProvider);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _dataProvider = dataProvider;
+        _logger = logger;
     }
 
     [LambdaFunction(ResourceName = "GamestoreServerlessGetAvailableGames", MemorySize = 128, Timeout = 60)]
     [HttpApi(LambdaHttpMethod.Get, "/availablegames")]
     public async Task<IHttpResult> GetAvailableGamesAsync(ILambdaContext context)
     {
-        // Log the incoming request
-        context.Logger.LogInformation(
-            $"Start to process the request '{context.AwsRequestId}' to {context.FunctionName} function (ver. {context.FunctionVersion}).");
+        using var logScope = _logger.BeginScope(new Dictionary<string, object>()
+        {
+            [LoggerRes.ScopeCorrelationId] = context.AwsRequestId,
+            [LoggerRes.ScopeFunctionName] = context.FunctionName,
+            [LoggerRes.ScopeFunctionVersion] = context.FunctionVersion
+        });
+        
+        _logger.LogInformation(InfoRes.StartRequestMessage);
 
         try
         {
@@ -40,15 +51,14 @@ public class Functions
                 //.Distinct()
                 .Take(30).ToListAsync().ConfigureAwait(false);
 
-            context.Logger.LogInformation(
-                $"The request '{context.AwsRequestId}' of {context.FunctionName} function (ver. {context.FunctionVersion}) completed.");
+            _logger.LogInformation(InfoRes.EndRequestMessage);
 
             return HttpResults.Ok(availableGameList)
                 .AddCorsHeaders().AddJsonContentType();
         }
         catch (Exception e)
         {
-            context.Logger.LogError(e,$"The request '{context.AwsRequestId}' of {context.FunctionName} function (ver. {context.FunctionVersion}) failed due an error.");
+            _logger.LogError(e, ErrorsRes.GeneralError, e.Message);
             return HttpResults.InternalServerError(e.Message);
         }
     }
@@ -57,13 +67,19 @@ public class Functions
     [HttpApi(LambdaHttpMethod.Get, "/news")]
     public async Task<IHttpResult> GetNewsAsync([FromQuery] string gameId, ILambdaContext context)
     {
-        // Log the incoming request
-        context.Logger.LogInformation(
-            $"Start to process the request '{context.AwsRequestId}' to {context.FunctionName} function (ver. {context.FunctionVersion}).");
+        using var logScope = _logger.BeginScope(new Dictionary<string, object>()
+        {
+            [LoggerRes.ScopeCorrelationId] = context.AwsRequestId,
+            [LoggerRes.ScopeFunctionName] = context.FunctionName,
+            [LoggerRes.ScopeFunctionVersion] = context.FunctionVersion
+        });
+
+        _logger.LogInformation(InfoRes.StartRequestMessage);
 
         if (string.IsNullOrWhiteSpace(gameId))
         {
-            return HttpResults.BadRequest("Invalid value for 'gameId'")
+            _logger.LogWarning(ErrorsRes.InvalidGameIdParam);
+            return HttpResults.BadRequest(ErrorsRes.InvalidGameIdParam)
                 .AddCorsHeaders().AddTextContentType();
         }
 
@@ -71,21 +87,21 @@ public class Functions
         {
             var gameNews = await _dataProvider.GetGameNewsAsync(gameId, CancellationToken.None).ConfigureAwait(false);
 
-            context.Logger.LogInformation(
-                $"The request '{context.AwsRequestId}' of {context.FunctionName} function (ver. {context.FunctionVersion}) completed.");
-
             if (gameNews == null)
             {
-                return HttpResults.NotFound($"The game with id '{gameId}' is not found.")
+                _logger.LogWarning(ErrorsRes.GameNotFound, gameId);
+                return HttpResults.NotFound(ErrorsRes.GameNotFound.Replace("{gameId}",gameId))
                     .AddCorsHeaders().AddTextContentType();
             }
+
+            _logger.LogInformation(InfoRes.EndRequestMessage);
 
             return HttpResults.Ok(gameNews)
                 .AddCorsHeaders().AddJsonContentType();
         }
         catch (Exception e)
         {
-            context.Logger.LogError(e, $"The request '{context.AwsRequestId}' of {context.FunctionName} function (ver. {context.FunctionVersion}) failed due an error.");
+            _logger.LogError(e, ErrorsRes.GeneralError, e.Message);
             return HttpResults.InternalServerError(e.Message);
         }
     }
