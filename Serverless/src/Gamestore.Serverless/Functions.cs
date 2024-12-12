@@ -17,6 +17,9 @@ namespace Gamestore.Serverless;
 /// </summary>
 public class Functions
 {
+    private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(120);
+    private static readonly TimeSpan CancellingReservedTime = TimeSpan.FromSeconds(5);
+
     private readonly IDataProvider _dataProvider;
     private readonly ILogger<Functions> _logger;
 
@@ -34,22 +37,23 @@ public class Functions
     [HttpApi(LambdaHttpMethod.Get, "/availablegames")]
     public async Task<IHttpResult> GetAvailableGamesAsync(ILambdaContext context)
     {
-        using var logScope = _logger.BeginScope(new Dictionary<string, object>()
+        using var logScope = _logger.BeginScope(new Dictionary<string, object>
         {
             [LoggerRes.ScopeCorrelationId] = context.AwsRequestId,
             [LoggerRes.ScopeFunctionName] = context.FunctionName,
             [LoggerRes.ScopeFunctionVersion] = context.FunctionVersion
         });
-        
+        using var cts = CreateCancellationTokenSource(context);
+
         _logger.LogInformation(InfoRes.StartRequestMessage);
 
         try
         {
-            var availableGameList = await _dataProvider.GetAvailableGameListAsync(CancellationToken.None)
+            var availableGameList = await _dataProvider.GetAvailableGameListAsync(cts.Token)
                 .Where(m => !string.IsNullOrWhiteSpace(m.Name))
                 .OrderByDescending(m => m.GameId)
-                //.Distinct()
-                .Take(30).ToListAsync().ConfigureAwait(false);
+                .Distinct()
+                .Take(30).ToListAsync(cancellationToken: cts.Token).ConfigureAwait(false);
 
             _logger.LogInformation(InfoRes.EndRequestMessage);
 
@@ -73,6 +77,7 @@ public class Functions
             [LoggerRes.ScopeFunctionName] = context.FunctionName,
             [LoggerRes.ScopeFunctionVersion] = context.FunctionVersion
         });
+        using var cts = CreateCancellationTokenSource(context);
 
         _logger.LogInformation(InfoRes.StartRequestMessage);
 
@@ -85,7 +90,7 @@ public class Functions
 
         try
         {
-            var gameNews = await _dataProvider.GetGameNewsAsync(gameId, CancellationToken.None).ConfigureAwait(false);
+            var gameNews = await _dataProvider.GetGameNewsAsync(gameId, cts.Token).ConfigureAwait(false);
 
             if (gameNews == null)
             {
@@ -104,5 +109,15 @@ public class Functions
             _logger.LogError(e, ErrorsRes.GeneralError, e.Message);
             return HttpResults.InternalServerError(e.Message);
         }
+    }
+
+    private CancellationTokenSource CreateCancellationTokenSource(ILambdaContext context)
+    {
+        var timeout = context.RemainingTime.Subtract(CancellingReservedTime);
+        if (timeout.TotalSeconds - CancellingReservedTime.TotalSeconds <= double.Epsilon)
+        {
+            timeout = DefaultTimeout;
+        }
+        return new CancellationTokenSource(timeout);
     }
 }
