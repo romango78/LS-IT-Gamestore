@@ -1,27 +1,28 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 import { AxiosRequestConfig } from 'axios';
-import useAwsAuth from '../hooks/useAwsAuth';
+import { AvaliableGame, GameNews } from '../models';
+import addSigV4Auth from '../tools/awsAuth';
 import useApiCall from '../hooks/useApiCall';
 
+import { aws_backend_url } from '../assets/backend';
 import './../assets/styles/common.css';
 
-const aws_region = process.env.REACT_APP_AWS_REGION;
-const aws_httpapi_ref = process.env.REACT_APP_AWS_HTTPAPI_REF;
-const aws_backend_url = `https://${aws_httpapi_ref}.execute-api.${aws_region}.amazonaws.com`
+const NoNews: GameNews = { 'game-id': '', 'source': '', 'title': 'News', 'contents': 'Comming soon...', 'read-more': '' };
 
 const News: React.FC = () => {
-  function getAvailableGamesRequest(): AxiosRequestConfig {
+
+  function getAvailableGamesRequest(): AxiosRequestConfig | null {
     const config: AxiosRequestConfig = {
       baseURL: aws_backend_url,
-      url: "/availablegames",      
+      url: "/availablegames",
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
       }
     };
 
-    return config;
+    return addSigV4Auth(config);
   }
 
   function getNewsRequest(gameId: string | null): AxiosRequestConfig | null {
@@ -41,35 +42,41 @@ const News: React.FC = () => {
       }
     };
 
-    return config;
+    return addSigV4Auth(config);
   }
 
-  const [availableGames, setAvailableGames] = React.useState([{ 'game-id': '', 'name': '' }]);
   const [availableGamesRequest] = React.useState(getAvailableGamesRequest());
-  const [availableGamesRequestWithAuth, setAvailableGamesRequestWithAuth] = React.useState({});
-  const [newsRequest, setNewsRequest] = React.useState(getNewsRequest(null));
-  const [newsRequestWithAuth, setNewsRequestWithAuth] = React.useState({});
-  const [news, setNews] = React.useState({ 'game-id': '', 'source': '', 'title': 'News', 'contents': 'Comming soon...', 'read-more': '' });
+  const [availableGames, setAvailableGames] = React.useState([] as AvaliableGame[]);
+  const [newsRequest, setNewsRequest] = React.useState(null as AxiosRequestConfig | null);
+  const [news, setNews] = React.useState(NoNews);
 
-  useAwsAuth({ apiRequest: availableGamesRequest, setData: setAvailableGamesRequestWithAuth });
-  useApiCall({ apiRequest: availableGamesRequestWithAuth, setData: setAvailableGames });  
-    
+  useApiCall({ apiRequest: availableGamesRequest, setData: setAvailableGames, limit: 10000 }); 
+  useApiCall({ apiRequest: newsRequest, setData: setNews, limit: 10000 });
+
   React.useEffect(() => {
-    const intervalAppIdChaging = setInterval(() => {
+    function getNews() {
       const count = availableGames.length;
+      if (count === 0)
+        return;
       const index = Math.floor(Math.random() * count);
       const gameId = availableGames[index]['game-id'];
 
       console.info(`Selected game '${gameId}':'${index}' for downloading News`);
-      setNewsRequest(getNewsRequest(gameId));
-    }, 20000);
 
-    return () => clearInterval(intervalAppIdChaging);
+      const request = getNewsRequest(gameId);
+      if (request !== null)
+        setNewsRequest(request);
+    };
+
+    if (availableGames === null || availableGames.length === 0)
+      return;
+
+    getNews();
+
+    const intervalChaging = setInterval(() => getNews(), 60000);
+
+    return () => clearInterval(intervalChaging);
   }, [availableGames]); 
-
-  
-  useAwsAuth({ apiRequest: newsRequest, setData: setNewsRequestWithAuth });
-  useApiCall({ apiRequest: newsRequestWithAuth, setData: setNews });
 
   return (
     <section className="gutter-lg">

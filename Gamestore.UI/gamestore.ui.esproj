@@ -12,6 +12,6 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\build</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\tools\" />
+    <Folder Include="src\pages\" />
   </ItemGroup>
 </Project>

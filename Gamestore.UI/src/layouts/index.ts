@@ -1,3 +1,4 @@
+export { default as App } from './App'
 export { default as Body } from './Body'
 export { default as Cart } from './Cart'
 export { default as Footer } from './Footer'

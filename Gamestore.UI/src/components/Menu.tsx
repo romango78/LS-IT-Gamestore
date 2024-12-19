@@ -30,7 +30,7 @@ const Menu: React.FC<MenuProps> = (props) => {
   return isNoItems
     ? (
       <>
-        {renderEmpty}
+        {renderEmpty({})}
       </>
     )
     : (

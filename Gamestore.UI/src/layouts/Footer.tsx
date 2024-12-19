@@ -1,9 +1,10 @@
 import React from 'react'
 import { Row, Col, NavLink } from 'reactstrap'
 import { MenuItem, Menu } from './../components'
+import { NavLink as RNavLink } from 'react-router-dom';
 
 import './../assets/styles/footer.css'
-import { siteLinksMenuItems, companyInfoMenuItems, socialMediaMenuItems } from '../assets/Links'
+import { siteLinksMenuItems, companyInfoMenuItems, socialMediaMenuItems } from '../assets/links'
 
 const Footer: React.FC = () => {
   return (
@@ -14,21 +15,21 @@ const Footer: React.FC = () => {
             <Menu vertical label="Site Links"
               items={siteLinksMenuItems}
               renderItem={(item: MenuItem) => (
-                <NavLink href={item.link} className="p-0 text-reset">{item.title}</NavLink>
+                <NavLink tag={RNavLink} to={item.link} className="p-0 text-reset">{item.title}</NavLink>
                 )} />
           </Col>
           <Col>
             <Menu vertical label="Company Information"
               items={companyInfoMenuItems}
               renderItem={(item: MenuItem) => (
-                <NavLink href={item.link} className="p-0 text-reset">{item.title}</NavLink>
+                <NavLink tag={RNavLink} to={item.link} className="p-0 text-reset">{item.title}</NavLink>
                 )} />
           </Col>
           <Col>
             <Menu vertical className="flex-md-row" label="Social Media"
               items={socialMediaMenuItems}
               renderItem={(item: MenuItem) => (
-                <NavLink href={item.link} className="p-0">{<item.img />}</NavLink>
+                <NavLink tag={RNavLink} to={item.link} className="p-0">{<item.img />}</NavLink>
                 )} />
           </Col>
         </Row>

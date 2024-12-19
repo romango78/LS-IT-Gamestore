@@ -1,8 +1,7 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Container, Row, Col } from 'reactstrap'
 import { GetInTouch } from '../components'
-import { Main, Games, Genres, Publishers, Orders, Cart } from './'
 
 import './../assets/styles/common.css';
 
@@ -10,16 +9,8 @@ const Body: React.FC = () => {
   return (
     <section id="body">
       <Container fluid className="context-area">
-        <Row className="g-0">          
-            <Routes>
-              <Route path="/" element={<Main />} />
-              <Route path="/games" element={<Games />} />
-              <Route path="/genres" element={<Genres />} />
-              <Route path="/publishers" element={<Publishers />} />
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="*" element={<Main />} />
-            </Routes>          
+        <Row className="g-0">
+          <Outlet />
         </Row>
         <Row xl="3" xs="1" className="g-0">
           <Col className="pe-xl-3">

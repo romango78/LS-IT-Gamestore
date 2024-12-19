@@ -2,8 +2,9 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { Col, Row, NavLink, Container, Navbar, NavbarBrand, NavbarToggler, Collapse } from 'reactstrap'
 import { Menu, MenuItem } from './../components'
+import { NavLink as RNavLink } from 'react-router-dom';
 
-import { mainMenuItems } from './../assets/Links'
+import { mainMenuItems } from './../assets/links'
 import './../assets/styles/header.css'
 import background from './../assets/images/header-background.png'
 
@@ -31,7 +32,7 @@ const Header: React.FC = () => {
             <Menu navbar
               items={mainMenuItems}
               renderItem={(item: MenuItem) => (
-                <NavLink href={item.link}
+                <NavLink tag={RNavLink} to={item.link}
                   className="text-end text-uppercase"
                   active={currentLocation.pathname === item.link} >
                   {item.title}

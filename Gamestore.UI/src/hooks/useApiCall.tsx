@@ -4,14 +4,11 @@ import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 export interface UseApiCallProps {
   apiRequest: AxiosRequestConfig | null | undefined,
   setIsLoading?: React.Dispatch<React.SetStateAction<boolean>>,
-  setData: React.Dispatch<React.SetStateAction<any>>
+  setData: React.Dispatch<React.SetStateAction<any>>,
+  limit?: number
 };
 
-const validateProps = (props: UseApiCallProps) => {
-  const {
-    apiRequest
-  } = props;
-
+const validateProps = (apiRequest: AxiosRequestConfig | null | undefined) => {
   if (!apiRequest)
     return false;
 
@@ -24,15 +21,21 @@ const validateProps = (props: UseApiCallProps) => {
   return true;
 };
 
+const getRequestInfo = (apiRequest: AxiosRequestConfig | null | undefined) => {
+  return `${apiRequest?.baseURL ?? ''}${apiRequest?.url ?? ''}`;
+}
+
 const useApiCall = (props: UseApiCallProps) => {
   const {
     apiRequest,
     setIsLoading = undefined,
-    setData
-  } = props;
+    setData,
+    limit = 0
+  } = props; 
 
-  const callback = React.useCallback(() => {
+  const lastCallRef = React.useRef(0);
 
+  const throttledCallback = React.useCallback(async (): Promise<any> => {
     const setIsLoadingInternal = (val: boolean) => {
       if (setIsLoading === undefined || setIsLoading === null) {
         return;
@@ -41,40 +44,54 @@ const useApiCall = (props: UseApiCallProps) => {
       setIsLoading(val);
     }
 
-    // Validation props
-    if (!validateProps(props)) {
-      console.info("The 'useApiCall' was not invoked due the validation failure.");
-      return;
+    const callApi = async (apiRequest: AxiosRequestConfig | null | undefined) => {
+      console.info(`The 'useApiCall' hook invoked for ${getRequestInfo(apiRequest)}.`);
+
+      // Make API Call
+      try {
+        const response = await axios(apiRequest!);
+        console.info(`The 'useApiCall' hook completed for ${getRequestInfo(apiRequest)}`);
+        return response.data;
+      } catch (reason) {
+        let error: any;
+        if ((reason as any)?.isAxiosError) {
+          const axiosError = reason as AxiosError;
+          error = `${apiRequest!.method} ${getRequestInfo(apiRequest)} ${axiosError?.message}.`;
+        } else {
+          error = reason;
+        }
+        throw error;
+      }
     }
 
-    const callApi = async () => {
+    const now = Date.now();
+    if (now - lastCallRef.current >= limit) {
+      lastCallRef.current = now;
+
+      // Set Is Loading
       setIsLoadingInternal(true);
 
-      await axios(apiRequest!)
-        .then(response => {
-          console.info(`Invoked 'useApiCall' hook for ${apiRequest?.baseURL ?? ''}${apiRequest?.url ?? ''}`);
-          setData(response.data);
+      await callApi(apiRequest)
+        .then(data => {
+            setData(data);
+            setIsLoadingInternal(false);
         })
-        .catch(reason => {
-          let error: any;
-          if (reason?.isAxiosError) {
-            const axiosError = reason as AxiosError;
-            error = apiRequest!.method + ' ' + apiRequest!.url + ' ' + axiosError?.message;
-          } else {
-            error = reason;
-          }
+        .catch(error => {
           console.error(error);
+          setIsLoadingInternal(false);
         });
-      setIsLoadingInternal(false);
-    };
-
-    callApi();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiRequest]);
+    }
+  }, [apiRequest, limit, setData, setIsLoading]);
 
   React.useEffect(() => {
-    callback();
-  }, [callback]);  
+    // Validation props
+    if (!validateProps(apiRequest)) {
+      console.warn(`The 'useApiCall' hook failed for ${getRequestInfo(apiRequest)} due the validation errors.`);
+      return;
+    } 
+
+    throttledCallback();
+  }, [apiRequest, throttledCallback]);  
 }
 
 export default useApiCall;
