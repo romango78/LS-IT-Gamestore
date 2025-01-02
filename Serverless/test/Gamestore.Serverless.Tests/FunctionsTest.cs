@@ -10,7 +10,9 @@ using System.Text;
 using System.Text.Json;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using Gamestore.DataProvider.Abstractions.Models;
+using Gamestore.Serverless.Exceptions;
 using Gamestore.Serverless.Properties;
+using Gamestore.Serverless.Services;
 
 namespace Gamestore.Serverless.Tests;
 
@@ -63,7 +65,7 @@ public class FunctionsTest
 
         var logger = Mock.Of<ILogger<Functions>>();
 
-        var sut = new Functions(dataProvider, logger);
+        var sut = new Functions(dataProvider, Mock.Of<IGameNewsService>(), logger);
 
         // Act
         var result = await sut.GetAvailableGamesAsync(context);
@@ -121,7 +123,7 @@ public class FunctionsTest
 
         var logger = Mock.Of<ILogger<Functions>>();
 
-        var sut = new Functions(dataProvider, logger);
+        var sut = new Functions(dataProvider, Mock.Of<IGameNewsService>(), logger);
 
         // Act
         var result = await sut.GetAvailableGamesAsync(context);
@@ -175,7 +177,7 @@ public class FunctionsTest
             .Throws(new Exception(expectedErrorMessage));
         var logger = Mock.Of<ILogger<Functions>>();
 
-        var sut = new Functions(dataProvider, logger);
+        var sut = new Functions(dataProvider, Mock.Of<IGameNewsService>(), logger);
 
         // Act
         var result = await sut.GetAvailableGamesAsync(context);
@@ -230,17 +232,17 @@ public class FunctionsTest
             isBase64Encoded = false
         };
 
-        var dataProvider = Mock.Of<IDataProvider>();
-        Mock.Get(dataProvider)
-            .Setup(m => m.GetGameNewsAsync(GameId, It.IsAny<CancellationToken>()))
+        var gameNewsService = Mock.Of<IGameNewsService>();
+        Mock.Get(gameNewsService)
+            .Setup(m => m.GetNewsAsync(GameId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedBody);
 
         var logger = Mock.Of<ILogger<Functions>>();
 
-        var sut = new Functions(dataProvider, logger);
+        var sut = new Functions(Mock.Of<IDataProvider>(), gameNewsService, logger);
 
         // Act
-        var result = await sut.GetNewsAsync(GameId, context);
+        var result = await sut.GetNewsHttpApiAsync(GameId, context);
         var responseJson = await GetHttpResponseAsJsonAsync(result);
 
         // Asserts
@@ -255,10 +257,6 @@ public class FunctionsTest
                     p.ContainsKey(LoggerRes.ScopeCorrelationId) &&
                     p.ContainsKey(LoggerRes.ScopeFunctionName) &&
                     p.ContainsKey(LoggerRes.ScopeFunctionVersion))), Times.Once);
-        Mock.Get(logger)
-            .Verify(
-                m => m.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Exactly(2));
     }
 
     [Theory]
@@ -291,13 +289,16 @@ public class FunctionsTest
             isBase64Encoded = false
         };
 
-        var dataProvider = Mock.Of<IDataProvider>();
+        var gameNewsService = Mock.Of<IGameNewsService>();
+        Mock.Get(gameNewsService)
+            .Setup(m => m.GetNewsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new ServiceException(ErrorsRes.InvalidGameIdParam, HttpStatusCode.BadRequest));
         var logger = Mock.Of<ILogger<Functions>>();
 
-        var sut = new Functions(dataProvider, logger);
+        var sut = new Functions(Mock.Of<IDataProvider>(), gameNewsService, logger);
 
         // Act
-        var result = await sut.GetNewsAsync(gameId, context);
+        var result = await sut.GetNewsHttpApiAsync(gameId, context);
         var responseJson = await GetHttpResponseAsJsonAsync(result);
 
         // Asserts
@@ -305,11 +306,6 @@ public class FunctionsTest
             .And.Match<IHttpResult>(m => m.StatusCode == HttpStatusCode.BadRequest);
         responseJson.Should().NotBeNull()
             .And.BeEquivalentTo(JsonSerializer.Serialize(expectedResult));
-
-        Mock.Get(logger)
-            .Verify(
-                m => m.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
     }
 
     [Fact]
@@ -341,17 +337,16 @@ public class FunctionsTest
             isBase64Encoded = false
         };
 
-        var dataProvider = Mock.Of<IDataProvider>();
-        Mock.Get(dataProvider)
-            .Setup(m => m.GetGameNewsAsync(GameId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((GameNews?)null);
-
+        var gameNewsService = Mock.Of<IGameNewsService>();
+        Mock.Get(gameNewsService)
+            .Setup(m => m.GetNewsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new ServiceException(ErrorsRes.GameNotFound.Replace("{gameId}", GameId), HttpStatusCode.NotFound));
         var logger = Mock.Of<ILogger<Functions>>();
 
-        var sut = new Functions(dataProvider, logger);
+        var sut = new Functions(Mock.Of<IDataProvider>(), gameNewsService, logger);
 
         // Act
-        var result = await sut.GetNewsAsync(GameId, context);
+        var result = await sut.GetNewsHttpApiAsync(GameId, context);
         var responseJson = await GetHttpResponseAsJsonAsync(result);
 
         // Asserts
@@ -359,11 +354,6 @@ public class FunctionsTest
             .And.Match<IHttpResult>(m => m.StatusCode == HttpStatusCode.NotFound);
         responseJson.Should().NotBeNull()
             .And.BeEquivalentTo(JsonSerializer.Serialize(expectedResult));
-
-        Mock.Get(logger)
-            .Verify(
-                m => m.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
     }
 
     [Fact]
@@ -390,16 +380,17 @@ public class FunctionsTest
             isBase64Encoded = false
         };
 
-        var dataProvider = Mock.Of<IDataProvider>();
-        Mock.Get(dataProvider)
-            .Setup(m => m.GetGameNewsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .Throws(new Exception(expectedErrorMessage));
+        var gameNewsService = Mock.Of<IGameNewsService>();
+        Mock.Get(gameNewsService)
+            .Setup(m => m.GetNewsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new ServiceException(expectedErrorMessage, new Exception(expectedErrorMessage),
+                HttpStatusCode.InternalServerError));
         var logger = Mock.Of<ILogger<Functions>>();
 
-        var sut = new Functions(dataProvider, logger);
+        var sut = new Functions(Mock.Of<IDataProvider>(), gameNewsService, logger);
 
         // Act
-        var result = await sut.GetNewsAsync("3232", context);
+        var result = await sut.GetNewsHttpApiAsync("3232", context);
         var responseJson = await GetHttpResponseAsJsonAsync(result);
 
         // Asserts
@@ -407,11 +398,6 @@ public class FunctionsTest
             .And.Match<IHttpResult>(m => m.StatusCode == HttpStatusCode.InternalServerError);
         responseJson.Should().NotBeNull()
             .And.BeEquivalentTo(JsonSerializer.Serialize(expectedResult));
-
-        Mock.Get(logger)
-            .Verify(
-                m => m.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
     }
 
     private async Task<string> GetHttpResponseAsJsonAsync(IHttpResult? result)

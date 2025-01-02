@@ -61,12 +61,47 @@
           "AWSLambdaBasicExecutionRole"
         ],
         "PackageType": "Zip",
-        "Handler": "Gamestore.Serverless::Gamestore.Serverless.Functions_GetNewsAsync_Generated::GetNewsAsync",
+        "Handler": "Gamestore.Serverless::Gamestore.Serverless.Functions_GetNewsHttpApiAsync_Generated::GetNewsHttpApiAsync",
         "Events": {
           "RootGet": {
             "Type": "HttpApi",
             "Properties": {
               "Path": "/news",
+              "Method": "GET"
+            }
+          }
+        }
+      }
+    },
+    "GamestoreServerlessGetNewsRestApi": {
+      "Type": "AWS::Serverless::Function",
+      "Metadata": {
+        "Tool": "Amazon.Lambda.Annotations",
+        "SyncedEvents": [
+          "RootGet"
+        ],
+        "SyncedEventProperties": {
+          "RootGet": [
+            "Path",
+            "Method"
+          ]
+        }
+      },
+      "Properties": {
+        "Runtime": "dotnet8",
+        "CodeUri": ".",
+        "MemorySize": 128,
+        "Timeout": 60,
+        "Policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "PackageType": "Zip",
+        "Handler": "Gamestore.Serverless::Gamestore.Serverless.Functions_GetNewsRestApiAsync_Generated::GetNewsRestApiAsync",
+        "Events": {
+          "RootGet": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/news/{gameId}",
               "Method": "GET"
             }
           }

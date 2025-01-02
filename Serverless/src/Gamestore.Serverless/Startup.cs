@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Gamestore.DataProvider.Abstractions.Models;
 using Gamestore.DataProvider.Abstractions.Services;
 using Gamestore.DataProvider.Steam.Extensions;
@@ -35,6 +34,7 @@ public class Startup
         services.AddSteamDependencies(configuration);
 
         services.AddScoped<IDataProvider, SteamDataProvider>();
+        services.AddScoped<IGameNewsService, GameNewsService>();
         services.AddKeyedScoped<IDataProvider>(nameof(CompositeDataProvider), (serviceProvider, _) =>
         {
             var compositeDataProvider = new CompositeDataProvider();

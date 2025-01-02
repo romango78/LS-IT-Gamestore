@@ -1,5 +1,7 @@
-﻿using System.Net.Mime;
+﻿using System.Net;
+using System.Net.Mime;
 using Amazon.Lambda.Annotations.APIGateway;
+using Gamestore.Serverless.Exceptions;
 using Microsoft.Net.Http.Headers;
 
 namespace Gamestore.Serverless.Extensions
@@ -35,6 +37,23 @@ namespace Gamestore.Serverless.Extensions
             httpResult.AddHeader(HeaderNames.ContentType, MediaTypeNames.Text.Plain);
 
             return httpResult;
+        }
+
+        public static IHttpResult GetHttpResult(this ServiceException exception)
+        {
+            switch (exception.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    return HttpResults.BadRequest(exception.Message)
+                        .AddCorsHeaders().AddTextContentType();
+                case HttpStatusCode.NotFound:
+                    return HttpResults.NotFound(exception.Message)
+                        .AddCorsHeaders().AddTextContentType();
+                case HttpStatusCode.InternalServerError:
+                    return HttpResults.InternalServerError(exception.Message);
+                default:
+                    return HttpResults.NewResult((HttpStatusCode)exception.StatusCode!, exception.Message);
+            }
         }
     }
 }

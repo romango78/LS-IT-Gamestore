@@ -7,6 +7,7 @@ using Gamestore.Serverless.Properties;
 using Gamestore.Serverless.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Gamestore.Serverless.Exceptions;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -22,15 +23,18 @@ public class Functions
 
     private readonly IDataProvider _dataProvider;
     private readonly ILogger<Functions> _logger;
+    private readonly IGameNewsService _gameNewsService;
 
     public Functions([FromKeyedServices(nameof(CompositeDataProvider))] IDataProvider dataProvider,
-        ILogger<Functions> logger)
+        IGameNewsService gameNewsService, ILogger<Functions> logger)
     {
         ArgumentNullException.ThrowIfNull(dataProvider);
         ArgumentNullException.ThrowIfNull(logger);
+        ArgumentNullException.ThrowIfNull(gameNewsService);
 
         _dataProvider = dataProvider;
         _logger = logger;
+        _gameNewsService = gameNewsService;
     }
 
     [LambdaFunction(ResourceName = "GamestoreServerlessGetAvailableGames", MemorySize = 128, Timeout = 60)]
@@ -69,9 +73,21 @@ public class Functions
 
     [LambdaFunction(ResourceName = "GamestoreServerlessGetNews", MemorySize = 128, Timeout = 60)]
     [HttpApi(LambdaHttpMethod.Get, "/news")]
-    public async Task<IHttpResult> GetNewsAsync([FromQuery] string gameId, ILambdaContext context)
+    public Task<IHttpResult> GetNewsHttpApiAsync([FromQuery] string gameId, ILambdaContext context)
     {
-        using var logScope = _logger.BeginScope(new Dictionary<string, object>()
+        return GetNewsAsync(gameId, context);
+    }
+
+    [LambdaFunction(ResourceName = "GamestoreServerlessGetNewsRestApi", MemorySize = 128, Timeout = 60)]
+    [RestApi(LambdaHttpMethod.Get, "/news/{gameId}")]
+    public Task<IHttpResult> GetNewsRestApiAsync(string gameId, ILambdaContext context)
+    {
+        return GetNewsAsync(gameId, context);
+    }
+
+    private async Task<IHttpResult> GetNewsAsync(string gameId, ILambdaContext context)
+    {
+        using var logScope = _logger.BeginScope(new Dictionary<string, object>
         {
             [LoggerRes.ScopeCorrelationId] = context.AwsRequestId,
             [LoggerRes.ScopeFunctionName] = context.FunctionName,
@@ -79,30 +95,16 @@ public class Functions
         });
         using var cts = CreateCancellationTokenSource(context);
 
-        _logger.LogInformation(InfoRes.StartRequestMessage);
-
-        if (string.IsNullOrWhiteSpace(gameId))
-        {
-            _logger.LogWarning(ErrorsRes.InvalidGameIdParam);
-            return HttpResults.BadRequest(ErrorsRes.InvalidGameIdParam)
-                .AddCorsHeaders().AddTextContentType();
-        }
-
         try
         {
-            var gameNews = await _dataProvider.GetGameNewsAsync(gameId, cts.Token).ConfigureAwait(false);
-
-            if (gameNews == null)
-            {
-                _logger.LogWarning(ErrorsRes.GameNotFound, gameId);
-                return HttpResults.NotFound(ErrorsRes.GameNotFound.Replace("{gameId}",gameId))
-                    .AddCorsHeaders().AddTextContentType();
-            }
-
-            _logger.LogInformation(InfoRes.EndRequestMessage);
+            var gameNews = await _gameNewsService.GetNewsAsync(gameId, cts.Token).ConfigureAwait(false);
 
             return HttpResults.Ok(gameNews)
                 .AddCorsHeaders().AddJsonContentType();
+        }
+        catch (ServiceException e)
+        {
+            return e.GetHttpResult();
         }
         catch (Exception e)
         {
