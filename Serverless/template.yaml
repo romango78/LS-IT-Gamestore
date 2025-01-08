@@ -15,21 +15,24 @@ Transform:
 # All the AWS::Serverless::Function, AWS::Serverless::Api, and AWS::Serverless::SimpleTable resources 
 # inherit the properties that are defined in the Globals section.
 Globals:
-  Api:    
-    CacheClusterEnabled: true
-    CacheClusterSize: "0.5"    
-    MethodSettings:
-    - HttpMethod: GET
-      ResourcePath: /~1news~1*
-      CachingEnabled: true
-      CacheDataEncrypted: false
-      CacheTtlInSeconds: 1200
-      ThrottlingBurstLimit: TBD
-      ThrottlingRateLimit: TBD
+  # Api:    
+  #   CacheClusterEnabled: false
+  #   CacheClusterSize: "0.5"    
+  #   MethodSettings:
+  #   - HttpMethod: GET
+  #     ResourcePath: /~1news~1*
+  #     CachingEnabled: false
+  #     CacheDataEncrypted: false
+  #     CacheTtlInSeconds: 600
+  #     ThrottlingBurstLimit: TBD
+  #     ThrottlingRateLimit: TBD
   HttpApi:
     Auth:
       DefaultAuthorizer: AWS_IAM
       EnableIamAuthorizer: true
+    DefaultRouteSettings:
+      ThrottlingBurstLimit: 100
+      ThrottlingRateLimit: 10
     CorsConfiguration:
       AllowOrigins:
       - "*"
@@ -114,37 +117,37 @@ Resources:
         RootGet:
           Type: HttpApi
           Properties:
-            Path: /news
+            Path: /news/{gameId}
             Method: GET
 
   # The Lambda function (support REST API) configs associated with the project: Gamestore.Serverless
   # The Lambda function returns a news for specified game (by Id)
-  GamestoreServerlessGetNewsRestApi:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-      - RootGet
-      SyncedEventProperties:
-        RootGet:
-        - Path
-        - Method
-    Properties:
-      Description: Get a news for specified game (by Id).
-      Runtime: dotnet8
-      CodeUri: ./src/Gamestore.Serverless/
-      MemorySize: 128
-      Timeout: 60
-      Policies:
-      - AWSLambdaBasicExecutionRole
-      PackageType: Zip
-      Handler: Gamestore.Serverless::Gamestore.Serverless.Functions_GetNewsRestApiAsync_Generated::GetNewsRestApiAsync
-      Events:
-        RootGet:
-          Type: Api
-          Properties:
-            Path: /news/{gameId}
-            Method: GET
+  # GamestoreServerlessGetNewsRestApi:
+  #   Type: AWS::Serverless::Function
+  #   Metadata:
+  #     Tool: Amazon.Lambda.Annotations
+  #     SyncedEvents:
+  #     - RootGet
+  #     SyncedEventProperties:
+  #       RootGet:
+  #       - Path
+  #       - Method
+  #   Properties:
+  #     Description: Get a news for specified game (by Id).
+  #     Runtime: dotnet8
+  #     CodeUri: ./src/Gamestore.Serverless/
+  #     MemorySize: 128
+  #     Timeout: 60
+  #     Policies:
+  #     - AWSLambdaBasicExecutionRole
+  #     PackageType: Zip
+  #     Handler: Gamestore.Serverless::Gamestore.Serverless.Functions_GetNewsRestApiAsync_Generated::GetNewsRestApiAsync
+  #     Events:
+  #       RootGet:
+  #         Type: Api
+  #         Properties:
+  #           Path: /news/{gameId}
+  #           Method: GET
 Outputs:
   ApiURL:
     Description: API endpoint URL

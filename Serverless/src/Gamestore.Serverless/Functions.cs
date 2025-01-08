@@ -72,8 +72,8 @@ public class Functions
     }
 
     [LambdaFunction(ResourceName = "GamestoreServerlessGetNews", MemorySize = 128, Timeout = 60)]
-    [HttpApi(LambdaHttpMethod.Get, "/news")]
-    public Task<IHttpResult> GetNewsHttpApiAsync([FromQuery] string gameId, ILambdaContext context)
+    [HttpApi(LambdaHttpMethod.Get, "/news/{gameId}")]
+    public Task<IHttpResult> GetNewsHttpApiAsync(string gameId, ILambdaContext context)
     {
         return GetNewsAsync(gameId, context);
     }
