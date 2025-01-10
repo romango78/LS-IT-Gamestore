@@ -55,42 +55,68 @@ Globals:
       Variables:
         POWERTOOLS_SERVICE_NAME: powertools-dotnet-logging-sample
         POWERTOOLS_LOG_LEVEL: Debug
+        AWS_ROLE_ID: AWS_ROLE_ID
+        AWS_SECRET_ID: AWS_SECRET_ID
+
+Parameters:
+  GamestoreQueueName:
+    Type: String
+    Description: Gamestore Queue Name
+    Default: lp-is-gamestore-queue.fifo
+  RootUserArn:
+    Type: String
+    Description: User to maintain SQS
+    Default: arn:aws:iam::940482444595:root
+  GamestoreAppUserArn:
+    Type: String
+    Description: Gamestore Application User to which AWS Services allow performing actions
+    Default: arn:aws:iam::940482444595:user/gamestore-app
 
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
+  # The SQS queues
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sqs-queue.html
+  # The queue is used for destribution submited carts to consumers that create and process the orders 
+  # base on cart's data
+  GamestoreQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref GamestoreQueueName
+      FifoQueue: true
+      ContentBasedDeduplication: true
+      ReceiveMessageWaitTimeSeconds: 10
+      MaximumMessageSize: 262144
+      MessageRetentionPeriod: 432000      
+      VisibilityTimeout: 600
+
+  # The SQS queue policies
+  GamestoreQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action: sqs:*
+          Effect: Allow
+          Resource: !GetAtt GamestoreQueue.Arn
+          Principal:
+            AWS:
+            - !Ref RootUserArn
+        - Action:
+          - "sqs:DeleteMessage"
+          - "sqs:GetQueueUrl"
+          - "sqs:ReceiveMessage"
+          - "sqs:SendMessage"
+          Effect: Allow
+          Resource: !GetAtt GamestoreQueue.Arn
+          Principal:
+            AWS:
+            - !Ref GamestoreAppUserArn
+      Queues:
+      - !Ref GamestoreQueue
 
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-  # The Lambda function (support HTTP API) configs associated with the project: Gamestore.Serverless
-  # The Lambda function returns a list of available games that are collected from different sources
-  GamestoreServerlessGetAvailableGames:
-    Type: AWS::Serverless::Function
-    Metadata:
-      Tool: Amazon.Lambda.Annotations
-      SyncedEvents:
-      - RootGet
-      SyncedEventProperties:
-        RootGet:
-        - Path
-        - Method
-    Properties:
-      Description: Get a list of available games from the Gamestore sources.
-      Runtime: dotnet8
-      CodeUri: ./src/Gamestore.Serverless/
-      MemorySize: 128
-      Timeout: 60
-      Policies:
-      - AWSLambdaBasicExecutionRole
-      PackageType: Zip
-      Handler: Gamestore.Serverless::Gamestore.Serverless.Functions_GetAvailableGamesAsync_Generated::GetAvailableGamesAsync
-      Events:
-        RootGet:
-          Type: HttpApi
-          Properties:
-            Path: /availablegames
-            Method: GET
-
   # The Lambda function (support HTTP API) configs associated with the project: Gamestore.Serverless
   # The Lambda function returns a news for specified game (by Id)
   GamestoreServerlessGetNews:
@@ -106,13 +132,13 @@ Resources:
     Properties:
       Description: Get a news for specified game (by Id).
       Runtime: dotnet8
-      CodeUri: ./src/Gamestore.Serverless/
+      CodeUri: ./src/Gamestore.Serverless.HttpApi/
       MemorySize: 128
       Timeout: 60
       Policies:
       - AWSLambdaBasicExecutionRole
       PackageType: Zip
-      Handler: Gamestore.Serverless::Gamestore.Serverless.Functions_GetNewsAsync_Generated::GetNewsAsync
+      Handler: Gamestore.Serverless.HttpApi::Gamestore.Serverless.HttpApi.Functions_GetNewsAsync_Generated::GetNewsAsync
       Events:
         RootGet:
           Type: HttpApi
@@ -120,34 +146,64 @@ Resources:
             Path: /news/{gameId}
             Method: GET
 
-  # The Lambda function (support REST API) configs associated with the project: Gamestore.Serverless
-  # The Lambda function returns a news for specified game (by Id)
-  # GamestoreServerlessGetNewsRestApi:
-  #   Type: AWS::Serverless::Function
-  #   Metadata:
-  #     Tool: Amazon.Lambda.Annotations
-  #     SyncedEvents:
-  #     - RootGet
-  #     SyncedEventProperties:
-  #       RootGet:
-  #       - Path
-  #       - Method
-  #   Properties:
-  #     Description: Get a news for specified game (by Id).
-  #     Runtime: dotnet8
-  #     CodeUri: ./src/Gamestore.Serverless/
-  #     MemorySize: 128
-  #     Timeout: 60
-  #     Policies:
-  #     - AWSLambdaBasicExecutionRole
-  #     PackageType: Zip
-  #     Handler: Gamestore.Serverless::Gamestore.Serverless.Functions_GetNewsRestApiAsync_Generated::GetNewsRestApiAsync
-  #     Events:
-  #       RootGet:
-  #         Type: Api
-  #         Properties:
-  #           Path: /news/{gameId}
-  #           Method: GET
+  # The Lambda function (support HTTP API) configs associated with the project: Gamestore.Serverless
+  # The Lambda function submit a specified cart
+  GamestoreServerlessCartSubmit:
+    Type: AWS::Serverless::Function
+    Metadata: 
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+      - RootPost
+      SyncedEventProperties:
+        RootGet:
+        - Path
+        - Method
+    Properties:
+      Description: Submit specified cart.
+      Runtime: dotnet8
+      CodeUri: ./src/Gamestore.Serverless.HttpApi/
+      MemorySize: 128
+      Timeout: 60
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      PackageType: Zip
+      Handler: Gamestore.Serverless.HttpApi::Gamestore.Serverless.HttpApi.Functions_CartSubmitAsync_Generated::CartSubmitAsync
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /cart/submit
+            Method: POST
+
+  # The Lambda function (support HTTP API) configs associated with the project: Gamestore.Serverless
+  # The Lambda function returns a list of available games that are collected from different sources
+  GamestoreServerlessGetGames:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+      - RootGet
+      SyncedEventProperties:
+        RootGet:
+        - Path
+        - Method
+    Properties:
+      Description: Get a list of games from the Gamestore sources.
+      Runtime: dotnet8
+      CodeUri: ./src/Gamestore.Serverless.HttpApi/
+      MemorySize: 128
+      Timeout: 60
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      PackageType: Zip
+      Handler: Gamestore.Serverless.HttpApi::Gamestore.Serverless.HttpApi.Functions_GetGamesAsync_Generated::GetGamesAsync
+      Events:
+        RootGet:
+          Type: HttpApi
+          Properties:
+            Path: /games
+            Method: GET
+
 Outputs:
   ApiURL:
     Description: API endpoint URL
