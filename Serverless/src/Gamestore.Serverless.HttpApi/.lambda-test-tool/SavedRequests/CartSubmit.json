@@ -52,7 +52,7 @@
     "time": "12/Mar/2020:19:03:58 +0000",
     "timeEpoch": 1583348638390
   },
-  "body": "{ \"customerId\":\"52424\", \"details\": [{ \"productId\": \"63563\", \"quantity\": 1 },{ \"productId\": \"45234\", \"quantity\": 3 }]}",
+  "body": "{ \"customer_id\":\"52424\", \"products\": [{ \"product_id\": \"63563\", \"quantity\": 1 },{ \"product_id\": \"45234\", \"quantity\": 3 }]}",
   "pathParameters": { "parameter1": "value1" },
   "isBase64Encoded": false,
   "stageVariables": {

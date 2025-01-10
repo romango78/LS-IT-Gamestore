@@ -86,5 +86,23 @@ namespace Gamestore.Serverless.HttpApi.Properties {
                 return ResourceManager.GetString("InvalidGameIdParam", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Request ({requestIs}) Queue Url failed with status code {statusCode}..
+        /// </summary>
+        internal static string QueueUrlRequestFailed {
+            get {
+                return ResourceManager.GetString("QueueUrlRequestFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Request ({requestIs}) to send Message ({messageId}) failed with status code {statusCode}..
+        /// </summary>
+        internal static string SendMessageRequestFailed {
+            get {
+                return ResourceManager.GetString("SendMessageRequestFailed", resourceCulture);
+            }
+        }
     }
 }

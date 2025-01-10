@@ -4,7 +4,7 @@ namespace Gamestore.Serverless.HttpApi.Models;
 
 public record CartItem
 {
-    [JsonPropertyName("productId")]
+    [JsonPropertyName("product_id")]
     public string? ProductId { get; set; }
 
     [JsonPropertyName("quantity")]

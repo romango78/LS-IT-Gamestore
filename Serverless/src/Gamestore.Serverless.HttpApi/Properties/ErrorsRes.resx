@@ -126,4 +126,10 @@
   <data name="InvalidGameIdParam" xml:space="preserve">
     <value>Invalid value of 'gameId'.</value>
   </data>
+  <data name="QueueUrlRequestFailed" xml:space="preserve">
+    <value>The Request ({requestIs}) Queue Url failed with status code {statusCode}.</value>
+  </data>
+  <data name="SendMessageRequestFailed" xml:space="preserve">
+    <value>The Request ({requestIs}) to send Message ({messageId}) failed with status code {statusCode}.</value>
+  </data>
 </root>

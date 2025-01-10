@@ -1,11 +1,10 @@
 ﻿using System.Net;
-using System.Text.Json;
-using Amazon;
-using Amazon.Runtime;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using FluentValidation;
+using Gamestore.Domain.Extensions;
 using Gamestore.Serverless.HttpApi.Exceptions;
+using Gamestore.Serverless.HttpApi.Extensions;
 using Gamestore.Serverless.HttpApi.Models;
 using Gamestore.Serverless.HttpApi.Properties;
 using Gamestore.SQS;
@@ -54,33 +53,47 @@ internal class CartService : ICartService
 
             if (queueUrlResponse.HttpStatusCode == HttpStatusCode.OK)
             {
+                var domainEvent = cart.ToDomainEvent();
                 var sendMessageRequest = new SendMessageRequest
                 {
                     MessageDeduplicationId = Guid.NewGuid().ToString(),
                     MessageGroupId = MessageGroups.SubmittedCart,
                     MessageAttributes = new Dictionary<string, MessageAttributeValue>(
                     [
-                        MessageAttributes.SubmittedAt
+                        MessageAttributes.SubmittedAt,
+                        MessageAttributes.Source(domainEvent.GetType())
                     ]),
-                    MessageBody = JsonSerializer.Serialize(cart),
+                    MessageBody = domainEvent.ToJson(),
                     QueueUrl = queueUrlResponse.QueueUrl
                 };
 
                 var sendMessageResponse = await _queueClient.SendMessageAsync(sendMessageRequest, cancellationToken);
                 if (sendMessageResponse.HttpStatusCode != HttpStatusCode.OK)
                 {
-                    // TODO
+                    throw new ServiceException(
+                        ErrorsRes.SendMessageRequestFailed
+                            .Replace("{requestId}", sendMessageResponse.ResponseMetadata.RequestId)
+                            .Replace("{messageId}", sendMessageResponse.MessageId)
+                            .Replace("{statusCode}", sendMessageResponse.HttpStatusCode.ToString()),
+                        HttpStatusCode.InternalServerError);
                 }
             }
             else
             {
-                // TODO
+                throw new ServiceException(
+                    ErrorsRes.QueueUrlRequestFailed
+                        .Replace("{requestId}", queueUrlResponse.ResponseMetadata.RequestId)
+                        .Replace("{statusCode}", queueUrlResponse.HttpStatusCode.ToString()),
+                    HttpStatusCode.InternalServerError);
             }
+            
         }
         catch (Exception e)
         {
             _logger.LogError(e, ErrorsRes.GeneralError, e.Message);
             throw new ServiceException(e.Message, e, HttpStatusCode.InternalServerError);
         }
+
+        _logger.LogInformation(InfoRes.EndRequestMessage);
     }
 }

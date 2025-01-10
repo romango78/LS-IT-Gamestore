@@ -3,6 +3,7 @@ using Gamestore.DataProvider.Abstractions.Models;
 using Gamestore.DataProvider.Abstractions.Services;
 using Gamestore.DataProvider.Steam.Extensions;
 using Gamestore.DataProvider.Steam.Services;
+using Gamestore.Domain.Configurations.Extensions;
 using Gamestore.Serverless.HttpApi.Configurations.Extensions;
 using Gamestore.Serverless.HttpApi.Models;
 using Gamestore.Serverless.HttpApi.Services;
@@ -35,10 +36,11 @@ public class Startup
         services.AddOptions();
         services.Configure<DataProviderSettings>(configuration.GetSection(nameof(DataProviderSettings)));
 
+        services.AddDomainDependencies();
         services.AddSteamDependencies(configuration);
 
-        services.AddScoped<IValidator<Cart>, CartValidator>();
-        services.AddScoped<IValidator<CartItem>, CartItemValidator>();
+        services.AddSingleton<IValidator<Cart>, CartValidator>();
+        services.AddSingleton<IValidator<CartItem>, CartItemValidator>();
 
         services.AddScoped<IDataProvider, SteamDataProvider>();
         services.AddScoped<IGamesService, GamesService>();

@@ -8,4 +8,10 @@ public static class MessageAttributes
         new("SubmittedAt",
             new MessageAttributeValue
                 { DataType = "String", StringValue = DateTime.UtcNow.ToString("MM/dd/yyyy hh:mm:ss") });
+
+    public static KeyValuePair<string, MessageAttributeValue> Source(Type type)
+    {
+        return new("SourceType",
+            new MessageAttributeValue { DataType = "String", StringValue = type.FullName });
+    }
 }
