@@ -16,11 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2ABD38DC-456
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2DAF3451-BE8A-410D-B7E5-A28F209BF28A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccessLayer", "DataAccessLayer", "{836462B3-CB7F-4D72-8FB4-E46EF41CFCA7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure Layer", "Infrastructure Layer", "{836462B3-CB7F-4D72-8FB4-E46EF41CFCA7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.DataProvider.Steam", "Serverless\src\Gamestore.DataProvider.Steam\Gamestore.DataProvider.Steam.csproj", "{931DD6C8-AFBC-4919-A614-095A8584484B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccessLayer", "DataAccessLayer", "{1F74FEA3-3D3F-4AB7-A557-590BD6F6B11D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure Layer", "Infrastructure Layer", "{1F74FEA3-3D3F-4AB7-A557-590BD6F6B11D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.DataProvider.Steam.Tests", "Serverless\test\Gamestore.DataProvider.Steam.Tests\Gamestore.DataProvider.Steam.Tests.csproj", "{4D7380A8-C544-4CB8-A2AE-789E15E28621}"
 EndProject
@@ -28,9 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.DataProvider.Abstractions", "Serverless\src\Gamestore.DataProvider.Abstractions\Gamestore.DataProvider.Abstractions.csproj", "{157D9A9E-E27F-4201-993D-15C8742E2FC8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer", "BusinessLayer", "{E2C0D625-EE42-4257-B434-AE719D311046}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain Layer", "Domain Layer", "{E2C0D625-EE42-4257-B434-AE719D311046}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PresentationLayer", "PresentationLayer", "{439EE685-620E-4AA6-9A3F-68D2AAA03B7E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application Layer", "Application Layer", "{439EE685-620E-4AA6-9A3F-68D2AAA03B7E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.Domain", "Serverless\src\Gamestore.Domain\Gamestore.Domain.csproj", "{03EEB9D0-2512-48CF-BF5E-1602B59D59B0}"
 EndProject
@@ -38,9 +38,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.Serverless.HttpAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.Serverless.HttpApi.Tests", "Serverless\test\Gamestore.Serverless.HttpApi.Tests\Gamestore.Serverless.HttpApi.Tests.csproj", "{F35F0057-82F7-4EA2-B345-7F9D5086BC88}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PresentationLayer", "PresentationLayer", "{9E3A883A-7013-4234-BA62-FE8D297AF084}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application Layer", "Application Layer", "{9E3A883A-7013-4234-BA62-FE8D297AF084}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gamestore.SQS", "Serverless\src\Gamestore.SQS\Gamestore.SQS.csproj", "{2C7EEFE8-E426-4742-B7AE-558C0917E7A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.SQS", "Serverless\src\Gamestore.SQS\Gamestore.SQS.csproj", "{2C7EEFE8-E426-4742-B7AE-558C0917E7A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.Serverless.SQS", "Serverless\src\Gamestore.Serverless.SQS\Gamestore.Serverless.SQS.csproj", "{3645C286-F7E8-4A63-822D-4999265D63D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain Layer", "Domain Layer", "{7258E1A9-C921-4069-BC3D-6C5867E78282}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.Domain.Tests", "Serverless\test\Gamestore.Domain.Tests\Gamestore.Domain.Tests.csproj", "{BAE76183-C2C5-466E-80E5-4658702E648E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gamestore.Serverless", "Serverless\src\Gamestore.Serverless\Gamestore.Serverless.csproj", "{466804D2-6A14-48CB-9ADB-5F19FE9B6D0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +90,18 @@ Global
 		{2C7EEFE8-E426-4742-B7AE-558C0917E7A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C7EEFE8-E426-4742-B7AE-558C0917E7A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C7EEFE8-E426-4742-B7AE-558C0917E7A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3645C286-F7E8-4A63-822D-4999265D63D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3645C286-F7E8-4A63-822D-4999265D63D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3645C286-F7E8-4A63-822D-4999265D63D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3645C286-F7E8-4A63-822D-4999265D63D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAE76183-C2C5-466E-80E5-4658702E648E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAE76183-C2C5-466E-80E5-4658702E648E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAE76183-C2C5-466E-80E5-4658702E648E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAE76183-C2C5-466E-80E5-4658702E648E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{466804D2-6A14-48CB-9ADB-5F19FE9B6D0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466804D2-6A14-48CB-9ADB-5F19FE9B6D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466804D2-6A14-48CB-9ADB-5F19FE9B6D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466804D2-6A14-48CB-9ADB-5F19FE9B6D0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,7 +120,11 @@ Global
 		{16F6C79A-7157-4DD0-BAD8-D089170DAAE1} = {439EE685-620E-4AA6-9A3F-68D2AAA03B7E}
 		{F35F0057-82F7-4EA2-B345-7F9D5086BC88} = {9E3A883A-7013-4234-BA62-FE8D297AF084}
 		{9E3A883A-7013-4234-BA62-FE8D297AF084} = {2DAF3451-BE8A-410D-B7E5-A28F209BF28A}
-		{2C7EEFE8-E426-4742-B7AE-558C0917E7A5} = {E2C0D625-EE42-4257-B434-AE719D311046}
+		{2C7EEFE8-E426-4742-B7AE-558C0917E7A5} = {439EE685-620E-4AA6-9A3F-68D2AAA03B7E}
+		{3645C286-F7E8-4A63-822D-4999265D63D6} = {439EE685-620E-4AA6-9A3F-68D2AAA03B7E}
+		{7258E1A9-C921-4069-BC3D-6C5867E78282} = {2DAF3451-BE8A-410D-B7E5-A28F209BF28A}
+		{BAE76183-C2C5-466E-80E5-4658702E648E} = {7258E1A9-C921-4069-BC3D-6C5867E78282}
+		{466804D2-6A14-48CB-9ADB-5F19FE9B6D0F} = {439EE685-620E-4AA6-9A3F-68D2AAA03B7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5AF33712-8BA7-431C-9222-0FA08A7E76FC}

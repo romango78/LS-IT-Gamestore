@@ -30,12 +30,12 @@ public class CartSubmitEvent : INotification
     #region Products
 
     [JsonPropertyName("products")]
-    public IEnumerable<(string ProductId, int Quantity)> Products { get; }
+    public IEnumerable<Product> Products { get; }
 
     #endregion Products
 
     public CartSubmitEvent(string? customerId, string? firstName, string? lastName, string? emailAddress,
-        IEnumerable<(string ProductId, int Quantity)> products)
+        IEnumerable<Product> products)
     {
         CustomerId = customerId;
         FirstName = firstName;
@@ -43,4 +43,10 @@ public class CartSubmitEvent : INotification
         EmailAddress = emailAddress;
         Products = products;
     }
+
+    public record Product(
+        [property: JsonPropertyName("product_id")]
+        string ProductId,
+        [property: JsonPropertyName("quantity")]
+        int Quantity);
 }

@@ -118,9 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="EndRequestMessage" xml:space="preserve">
-    <value>The request processed successfully.</value>
+    <value>The request processed successfully...</value>
+  </data>
+  <data name="QueueItemProcessingInfoMessage" xml:space="preserve">
+    <value>The message '{MsgId}' from the group '{Group}' with deduplication '{DedupId}' is being processed...</value>
   </data>
   <data name="StartRequestMessage" xml:space="preserve">
-    <value>Start to process a request.</value>
+    <value>Start to process a request...</value>
   </data>
 </root>

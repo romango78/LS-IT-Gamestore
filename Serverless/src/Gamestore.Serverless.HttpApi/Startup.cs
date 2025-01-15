@@ -33,7 +33,6 @@ public class Startup
             .AddEnvironmentVariables()
             .Build();
 
-        services.AddOptions();
         services.Configure<DataProviderSettings>(configuration.GetSection(nameof(DataProviderSettings)));
 
         services.AddDomainDependencies();

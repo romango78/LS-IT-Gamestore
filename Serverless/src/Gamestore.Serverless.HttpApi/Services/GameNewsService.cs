@@ -2,8 +2,9 @@
 using AWS.Lambda.Powertools.Logging;
 using Gamestore.DataProvider.Abstractions.Models;
 using Gamestore.DataProvider.Abstractions.Services;
-using Gamestore.Serverless.HttpApi.Exceptions;
+using Gamestore.Domain.Exceptions;
 using Gamestore.Serverless.HttpApi.Properties;
+using Gamestore.Serverless.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -31,7 +32,7 @@ internal class GameNewsService : IGameNewsService
         if (string.IsNullOrWhiteSpace(gameId))
         {
             _logger.LogWarning(ErrorsRes.InvalidGameIdParam);
-            throw new ServiceException(ErrorsRes.InvalidGameIdParam, HttpStatusCode.BadRequest);
+            throw new HttpBusinessException(ErrorsRes.InvalidGameIdParam, HttpStatusCode.BadRequest);
         }
 
         try
@@ -41,7 +42,7 @@ internal class GameNewsService : IGameNewsService
             if (gameNews == null)
             {
                 _logger.LogWarning(ErrorsRes.GameNotFound, gameId);
-                throw new ServiceException(ErrorsRes.GameNotFound.Replace("{gameId}", gameId), HttpStatusCode.NotFound);
+                throw new HttpBusinessException(ErrorsRes.GameNotFound.Replace("{gameId}", gameId), HttpStatusCode.NotFound);
             }
 
             _logger.LogInformation(InfoRes.EndRequestMessage);
@@ -50,8 +51,8 @@ internal class GameNewsService : IGameNewsService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, ErrorsRes.GeneralError, e.Message);
-            throw new ServiceException(e.Message, e, HttpStatusCode.InternalServerError);
+            _logger.LogError(e, LoggerRes.GeneralError, e.Message);
+            throw new HttpBusinessException(e.Message, e, HttpStatusCode.InternalServerError);
         }
     }
 }

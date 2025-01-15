@@ -1,0 +1,36 @@
+{
+  "Records": [
+    {
+      "messageId": "19dd0b57-b21e-4ac1-bd88-01bbb068cb78",
+      "receiptHandle": "AQEBBX8nesZEXmkhsmZeyIE8iQAMig7qw...",
+      "body": "{\"customer_id\":\"52424\",\"first_name\":\"\",\"last_name\":\"\",\"email\":\"\",\"products\":[{\"product_id\":\"63563\",\"quantity\":1},{\"product_id\":\"45234\",\"quantity\":3}]}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1523232000000",
+	"SequenceNumber": "18849496460467696128",
+	"MessageGroupId": "submitted-carts",
+        "SenderId": "123456789012",
+	"MessageDeduplicationId": "11d6ee51-4cc7-4302-9e22-7cd8afdaadf5",
+        "ApproximateFirstReceiveTimestamp": "1523232000001"
+      },
+      "messageAttributes": {
+	"SubmittedAt": {
+	  "stringValue": "01/15/2025 13:45:22",
+          "stringListValues": [], 
+          "binaryListValues": [], 
+          "dataType": "String"
+	},
+        "SourceType": {
+	  "stringValue": "Gamestore.Domain.Events.CartSubmitEvent",
+          "stringListValues": [], 
+          "binaryListValues": [], 
+          "dataType": "String"          
+        }
+      },
+      "md5OfBody": "ffcd79b53c4bb0a09a11080577202e2a",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:940482444595:lp-is-gamestore-queue.fifo",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}

@@ -117,16 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GameNotFound" xml:space="preserve">
-    <value>The game with id '{gameId}' is not found.</value>
-  </data>
-  <data name="InvalidGameIdParam" xml:space="preserve">
-    <value>Invalid value of 'gameId'.</value>
-  </data>
-  <data name="QueueUrlRequestFailed" xml:space="preserve">
-    <value>The Request ({requestIs}) Queue Url failed with status code {statusCode}.</value>
-  </data>
-  <data name="SendMessageRequestFailed" xml:space="preserve">
-    <value>The Request ({requestIs}) to send Message ({messageId}) failed with status code {statusCode}.</value>
+  <data name="DomainEventParsingFailed" xml:space="preserve">
+    <value>The message body contains unrecognized Domain Event.</value>
   </data>
 </root>

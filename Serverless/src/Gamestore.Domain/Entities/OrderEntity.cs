@@ -2,16 +2,20 @@
 
 public class OrderEntity
 {
-    private OrderEntity()
-    {
-    }
 
-    public OrderEntity(CustomerEntity customer, IEnumerable<BookedProductEntity> bookedProducts)
-        :this()
+    public string Id { get; }
+
+    public CustomerEntity Customer { get; }
+
+    public IEnumerable<BookedProductEntity> BookedProducts { get; }
+
+    public OrderEntity(string id, CustomerEntity customer, IEnumerable<BookedProductEntity> bookedProducts)
     {
+        ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(customer);
         ArgumentNullException.ThrowIfNull(bookedProducts);
 
+        Id = id;
         Customer = customer;
 
         if (!bookedProducts.Any())
@@ -22,9 +26,4 @@ public class OrderEntity
         BookedProducts = new HashSet<BookedProductEntity>(bookedProducts);
     }
 
-    public Guid Id { get; }
-
-    public CustomerEntity Customer { get; }
-
-    public IEnumerable<BookedProductEntity> BookedProducts { get; }
 }

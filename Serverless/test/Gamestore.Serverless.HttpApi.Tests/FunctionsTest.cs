@@ -6,10 +6,11 @@ using Amazon.Lambda.Serialization.SystemTextJson;
 using Amazon.Lambda.TestUtilities;
 using FluentAssertions;
 using Gamestore.DataProvider.Abstractions.Models;
-using Gamestore.Serverless.HttpApi.Exceptions;
+using Gamestore.Domain.Exceptions;
 using Gamestore.Serverless.HttpApi.Models;
 using Gamestore.Serverless.HttpApi.Properties;
 using Gamestore.Serverless.HttpApi.Services;
+using Gamestore.Serverless.Resources;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -272,7 +273,7 @@ public class FunctionsTest
         var gameNewsService = Mock.Of<IGameNewsService>();
         Mock.Get(gameNewsService)
             .Setup(m => m.GetNewsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new ServiceException(ErrorsRes.InvalidGameIdParam, HttpStatusCode.BadRequest));
+            .ThrowsAsync(new HttpBusinessException(ErrorsRes.InvalidGameIdParam, HttpStatusCode.BadRequest));
         var logger = Mock.Of<ILogger<Functions>>();
 
         var sut = new Functions(Mock.Of<IGamesService>(), gameNewsService, Mock.Of<ICartService>(), logger);
@@ -320,7 +321,7 @@ public class FunctionsTest
         var gameNewsService = Mock.Of<IGameNewsService>();
         Mock.Get(gameNewsService)
             .Setup(m => m.GetNewsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new ServiceException(ErrorsRes.GameNotFound.Replace("{gameId}", gameId), HttpStatusCode.NotFound));
+            .ThrowsAsync(new HttpBusinessException(ErrorsRes.GameNotFound.Replace("{gameId}", gameId), HttpStatusCode.NotFound));
         var logger = Mock.Of<ILogger<Functions>>();
 
         var sut = new Functions(Mock.Of<IGamesService>(), gameNewsService, Mock.Of<ICartService>(), logger);
@@ -363,7 +364,7 @@ public class FunctionsTest
         var gameNewsService = Mock.Of<IGameNewsService>();
         Mock.Get(gameNewsService)
             .Setup(m => m.GetNewsAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new ServiceException(expectedErrorMessage, new Exception(expectedErrorMessage),
+            .ThrowsAsync(new HttpBusinessException(expectedErrorMessage, new Exception(expectedErrorMessage),
                 HttpStatusCode.InternalServerError));
         var logger = Mock.Of<ILogger<Functions>>();
 

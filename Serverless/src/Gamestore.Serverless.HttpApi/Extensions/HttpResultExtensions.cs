@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mime;
 using Amazon.Lambda.Annotations.APIGateway;
-using Gamestore.Serverless.HttpApi.Exceptions;
+using Gamestore.Domain.Exceptions;
 using Microsoft.Net.Http.Headers;
 
 namespace Gamestore.Serverless.HttpApi.Extensions
@@ -39,7 +39,7 @@ namespace Gamestore.Serverless.HttpApi.Extensions
             return httpResult;
         }
 
-        public static IHttpResult GetHttpResult(this ServiceException exception)
+        public static IHttpResult GetHttpResult(this HttpBusinessException exception)
         {
             switch (exception.StatusCode)
             {

@@ -204,6 +204,40 @@ Resources:
             Path: /games
             Method: GET
 
+  #
+  GamestoreServerlessDomainEventHandler:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Tool: Amazon.Lambda.Annotations
+      SyncedEvents:
+      - GamestoreQueue
+      SyncedEventProperties:
+        GamestoreQueue:
+        - Queue.Fn::GetAtt
+        - BatchSize
+        - FunctionResponseTypes
+        - ScalingConfig.MaximumConcurrency
+    Properties:
+      Description: Handle Gamestore Domain Events.
+      Runtime: dotnet8
+      CodeUri: ./src/Gamestore.Serverless.SQS/
+      MemorySize: 128
+      Timeout: 60
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      PackageType: Zip
+      Handler: Gamestore.Serverless.SQS::Gamestore.Serverless.SQS.Functions_DomainEventHandlerAsync_Generated::DomainEventHandlerAsync
+      Events:
+        GamestoreQueue:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt GamestoreQueue.Arn
+            BatchSize: 10
+            FunctionResponseTypes:
+            - ReportBatchItemFailures
+            ScalingConfig:
+              MaximumConcurrency: 1000
+
 Outputs:
   ApiURL:
     Description: API endpoint URL

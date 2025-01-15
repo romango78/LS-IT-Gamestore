@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using Gamestore.DataProvider.Abstractions.Services;
-using Gamestore.Serverless.HttpApi.Exceptions;
+using Gamestore.Domain.Exceptions;
 using Gamestore.Serverless.HttpApi.Models;
-using Gamestore.Serverless.HttpApi.Properties;
+using Gamestore.Serverless.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -41,8 +41,8 @@ internal class GamesService : IGamesService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, ErrorsRes.GeneralError, e.Message);
-            throw new ServiceException(e.Message, e, HttpStatusCode.InternalServerError);
+            _logger.LogError(e, LoggerRes.GeneralError, e.Message);
+            throw new HttpBusinessException(e.Message, e, HttpStatusCode.InternalServerError);
         }
     }
 }

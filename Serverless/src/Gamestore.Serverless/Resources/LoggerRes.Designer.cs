@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Gamestore.Serverless.HttpApi.Properties {
+namespace Gamestore.Serverless.Resources {
     using System;
     
     
@@ -22,24 +22,24 @@ namespace Gamestore.Serverless.HttpApi.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ErrorsRes {
+    public class LoggerRes {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ErrorsRes() {
+        internal LoggerRes() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Gamestore.Serverless.HttpApi.Properties.ErrorsRes", typeof(ErrorsRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Gamestore.Serverless.Resources.LoggerRes", typeof(LoggerRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace Gamestore.Serverless.HttpApi.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,38 +61,38 @@ namespace Gamestore.Serverless.HttpApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The game with id &apos;{gameId}&apos; is not found..
+        ///   Looks up a localized string similar to The request failed due the error: {message}..
         /// </summary>
-        internal static string GameNotFound {
+        public static string GeneralError {
             get {
-                return ResourceManager.GetString("GameNotFound", resourceCulture);
+                return ResourceManager.GetString("GeneralError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid value of &apos;gameId&apos;..
+        ///   Looks up a localized string similar to CorrelationId.
         /// </summary>
-        internal static string InvalidGameIdParam {
+        public static string ScopeCorrelationId {
             get {
-                return ResourceManager.GetString("InvalidGameIdParam", resourceCulture);
+                return ResourceManager.GetString("ScopeCorrelationId", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Request ({requestIs}) Queue Url failed with status code {statusCode}..
+        ///   Looks up a localized string similar to FunctionName.
         /// </summary>
-        internal static string QueueUrlRequestFailed {
+        public static string ScopeFunctionName {
             get {
-                return ResourceManager.GetString("QueueUrlRequestFailed", resourceCulture);
+                return ResourceManager.GetString("ScopeFunctionName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Request ({requestIs}) to send Message ({messageId}) failed with status code {statusCode}..
+        ///   Looks up a localized string similar to FunctionVersion.
         /// </summary>
-        internal static string SendMessageRequestFailed {
+        public static string ScopeFunctionVersion {
             get {
-                return ResourceManager.GetString("SendMessageRequestFailed", resourceCulture);
+                return ResourceManager.GetString("ScopeFunctionVersion", resourceCulture);
             }
         }
     }

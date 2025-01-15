@@ -1,10 +1,11 @@
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Annotations.APIGateway;
 using Amazon.Lambda.Core;
-using Gamestore.Serverless.HttpApi.Exceptions;
+using Gamestore.Domain.Exceptions;
+using Gamestore.Serverless.Extensions;
 using Gamestore.Serverless.HttpApi.Extensions;
-using Gamestore.Serverless.HttpApi.Properties;
 using Gamestore.Serverless.HttpApi.Services;
+using Gamestore.Serverless.Resources;
 using Microsoft.Extensions.Logging;
 using Cart = Gamestore.Serverless.HttpApi.Models.Cart;
 
@@ -13,7 +14,7 @@ using Cart = Gamestore.Serverless.HttpApi.Models.Cart;
 namespace Gamestore.Serverless.HttpApi;
 
 /// <summary>
-/// A collection of sample Lambda functions that provide a REST api for doing simple math calculations. 
+/// A collection of sample Lambda functions that provide a HTTP/REST api handlers. 
 /// </summary>
 public class Functions
 {
@@ -84,30 +85,20 @@ public class Functions
             [LoggerRes.ScopeFunctionName] = context.FunctionName,
             [LoggerRes.ScopeFunctionVersion] = context.FunctionVersion
         });
-        using var cts = CreateCancellationTokenSource(context);
+        using var cts = CancellationTokenExtensions.CreateCancellationTokenSource(context);
 
         try
         {
             return await performer(cts.Token).ConfigureAwait(false);
         }
-        catch (ServiceException e)
+        catch (HttpBusinessException e)
         {
             return e.GetHttpResult();
         }
         catch (Exception e)
         {
-            _logger.LogError(e, ErrorsRes.GeneralError, e.Message);
+            _logger.LogError(e, LoggerRes.GeneralError, e.Message);
             return HttpResults.InternalServerError(e.Message);
         }
-    }
-
-    private static CancellationTokenSource CreateCancellationTokenSource(ILambdaContext context)
-    {
-        var timeout = context.RemainingTime.Subtract(CancellingReservedTime);
-        if (timeout.TotalSeconds - CancellingReservedTime.TotalSeconds <= double.Epsilon)
-        {
-            timeout = DefaultTimeout;
-        }
-        return new CancellationTokenSource(timeout);
     }
 }

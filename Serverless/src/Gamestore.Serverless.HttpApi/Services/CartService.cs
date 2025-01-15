@@ -2,11 +2,12 @@
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using FluentValidation;
+using Gamestore.Domain.Exceptions;
 using Gamestore.Domain.Extensions;
-using Gamestore.Serverless.HttpApi.Exceptions;
 using Gamestore.Serverless.HttpApi.Extensions;
 using Gamestore.Serverless.HttpApi.Models;
 using Gamestore.Serverless.HttpApi.Properties;
+using Gamestore.Serverless.Resources;
 using Gamestore.SQS;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -44,7 +45,7 @@ internal class CartService : ICartService
         if (!result.IsValid)
         {
             _logger.LogWarning(result.ToString("~"));
-            throw new ServiceException(result.ToString(), HttpStatusCode.BadRequest);
+            throw new HttpBusinessException(result.ToString(), HttpStatusCode.BadRequest);
         }
 
         try
@@ -70,7 +71,7 @@ internal class CartService : ICartService
                 var sendMessageResponse = await _queueClient.SendMessageAsync(sendMessageRequest, cancellationToken);
                 if (sendMessageResponse.HttpStatusCode != HttpStatusCode.OK)
                 {
-                    throw new ServiceException(
+                    throw new HttpBusinessException(
                         ErrorsRes.SendMessageRequestFailed
                             .Replace("{requestId}", sendMessageResponse.ResponseMetadata.RequestId)
                             .Replace("{messageId}", sendMessageResponse.MessageId)
@@ -80,18 +81,17 @@ internal class CartService : ICartService
             }
             else
             {
-                throw new ServiceException(
+                throw new HttpBusinessException(
                     ErrorsRes.QueueUrlRequestFailed
                         .Replace("{requestId}", queueUrlResponse.ResponseMetadata.RequestId)
                         .Replace("{statusCode}", queueUrlResponse.HttpStatusCode.ToString()),
                     HttpStatusCode.InternalServerError);
             }
-            
         }
         catch (Exception e)
         {
-            _logger.LogError(e, ErrorsRes.GeneralError, e.Message);
-            throw new ServiceException(e.Message, e, HttpStatusCode.InternalServerError);
+            _logger.LogError(e, LoggerRes.GeneralError, e.Message);
+            throw new HttpBusinessException(e.Message, e, HttpStatusCode.InternalServerError);
         }
 
         _logger.LogInformation(InfoRes.EndRequestMessage);

@@ -2,9 +2,10 @@
 using FluentAssertions;
 using Gamestore.DataProvider.Abstractions.Models;
 using Gamestore.DataProvider.Abstractions.Services;
-using Gamestore.Serverless.HttpApi.Exceptions;
+using Gamestore.Domain.Exceptions;
 using Gamestore.Serverless.HttpApi.Properties;
 using Gamestore.Serverless.HttpApi.Services;
+using Gamestore.Serverless.Resources;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -65,7 +66,7 @@ public class GameNewsServiceTests
         var action = async () => await sut.GetNewsAsync(gameId, CancellationToken.None);
 
         // Asserts
-        action.Should().ThrowAsync<ServiceException>().Where(e => e.StatusCode == HttpStatusCode.BadRequest)
+        action.Should().ThrowAsync<HttpBusinessException>().Where(e => e.StatusCode == HttpStatusCode.BadRequest)
             .WithMessage(ErrorsRes.InvalidGameIdParam);
 
         Mock.Get(logger)
@@ -93,7 +94,7 @@ public class GameNewsServiceTests
         var action = async () => await sut.GetNewsAsync(GameId, CancellationToken.None);
 
         // Asserts
-        action.Should().ThrowAsync<ServiceException>().Where(e => e.StatusCode == HttpStatusCode.NotFound)
+        action.Should().ThrowAsync<HttpBusinessException>().Where(e => e.StatusCode == HttpStatusCode.NotFound)
             .WithMessage(ErrorsRes.GameNotFound.Replace("{gameId}", GameId));
 
         Mock.Get(logger)
@@ -120,9 +121,9 @@ public class GameNewsServiceTests
         var action = async () => await sut.GetNewsAsync("3232", CancellationToken.None);
 
         // Asserts
-        action.Should().ThrowAsync<ServiceException>().Where(e =>
+        action.Should().ThrowAsync<HttpBusinessException>().Where(e =>
                 e.StatusCode == HttpStatusCode.InternalServerError && e.InnerException!.Equals(innerException))
-            .WithMessage(ErrorsRes.GeneralError);
+            .WithMessage(LoggerRes.GeneralError);
 
         Mock.Get(logger)
             .Verify(

@@ -117,16 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="GameNotFound" xml:space="preserve">
-    <value>The game with id '{gameId}' is not found.</value>
+  <data name="GeneralError" xml:space="preserve">
+    <value>The request failed due the error: {message}.</value>
   </data>
-  <data name="InvalidGameIdParam" xml:space="preserve">
-    <value>Invalid value of 'gameId'.</value>
+  <data name="ScopeCorrelationId" xml:space="preserve">
+    <value>CorrelationId</value>
   </data>
-  <data name="QueueUrlRequestFailed" xml:space="preserve">
-    <value>The Request ({requestIs}) Queue Url failed with status code {statusCode}.</value>
+  <data name="ScopeFunctionName" xml:space="preserve">
+    <value>FunctionName</value>
   </data>
-  <data name="SendMessageRequestFailed" xml:space="preserve">
-    <value>The Request ({requestIs}) to send Message ({messageId}) failed with status code {statusCode}.</value>
+  <data name="ScopeFunctionVersion" xml:space="preserve">
+    <value>FunctionVersion</value>
   </data>
 </root>

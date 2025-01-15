@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,7 +12,6 @@
     <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Amazon.Lambda.Core" Version="2.5.0" />
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.1" />
     <PackageReference Include="Amazon.Lambda.Logging.AspNetCore" Version="3.1.1" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.4" />
@@ -32,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Gamestore.DataProvider.Steam\Gamestore.DataProvider.Steam.csproj" />
     <ProjectReference Include="..\Gamestore.Domain\Gamestore.Domain.csproj" />
+    <ProjectReference Include="..\Gamestore.Serverless\Gamestore.Serverless.csproj" />
     <ProjectReference Include="..\Gamestore.SQS\Gamestore.SQS.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -55,16 +55,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ErrorsRes.resx</DependentUpon>
     </Compile>
-    <Compile Update="Properties\LoggerRes.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LoggerRes.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Properties\InfoRes.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>InfoRes.resx</DependentUpon>
-    </Compile>
     <Compile Update="Properties\ValidationRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -76,14 +66,6 @@
     <EmbeddedResource Update="Properties\ErrorsRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorsRes.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\LoggerRes.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LoggerRes.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Properties\InfoRes.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>InfoRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\ValidationRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Gamestore.Serverless.HttpApi.Properties {
+namespace Gamestore.Serverless.SQS.Properties {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Gamestore.Serverless.HttpApi.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class LoggerRes {
+    internal class ErrorsRes {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal LoggerRes() {
+        internal ErrorsRes() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Gamestore.Serverless.HttpApi.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Gamestore.Serverless.HttpApi.Properties.LoggerRes", typeof(LoggerRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Gamestore.Serverless.SQS.Properties.ErrorsRes", typeof(ErrorsRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,29 +61,11 @@ namespace Gamestore.Serverless.HttpApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CorrelationId.
+        ///   Looks up a localized string similar to The message body contains unrecognized Domain Event..
         /// </summary>
-        internal static string ScopeCorrelationId {
+        internal static string DomainEventParsingFailed {
             get {
-                return ResourceManager.GetString("ScopeCorrelationId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to FunctionName.
-        /// </summary>
-        internal static string ScopeFunctionName {
-            get {
-                return ResourceManager.GetString("ScopeFunctionName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to FunctionVersion.
-        /// </summary>
-        internal static string ScopeFunctionVersion {
-            get {
-                return ResourceManager.GetString("ScopeFunctionVersion", resourceCulture);
+                return ResourceManager.GetString("DomainEventParsingFailed", resourceCulture);
             }
         }
     }
