@@ -23,7 +23,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gamestore.Domain\Gamestore.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Gamestore.Application\Gamestore.Application.csproj" />
+    <ProjectReference Include="..\Gamestore.DataProvider.Origin\Gamestore.DataProvider.Origin.csproj" />
+    <ProjectReference Include="..\Gamestore.Infrastructure.Abstractions\Gamestore.Infrastructure.Abstractions.csproj" />
     <ProjectReference Include="..\Gamestore.Serverless\Gamestore.Serverless.csproj" />
     <ProjectReference Include="..\Gamestore.SQS\Gamestore.SQS.csproj" />
   </ItemGroup>

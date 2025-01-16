@@ -4,6 +4,9 @@ using Gamestore.DataProvider.Abstractions.Properties;
 
 namespace Gamestore.DataProvider.Abstractions.Services;
 
+/// <summary>
+/// TODO: Will be refactored
+/// </summary>
 public abstract class AbstractCompositeDataProvider : IDataProvider
 {
     public void RegisterDataProvider(IDataProvider dataProvider)

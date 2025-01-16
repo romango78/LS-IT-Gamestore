@@ -5,7 +5,7 @@ using Gamestore.Domain.Queries;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Gamestore.Serverless.SQS.Handlers.Events;
+namespace Gamestore.Application.UseCases;
 
 /// <summary>
 /// The <c>ValidateOrAddCustomerWhenCartSubmittedEventHandler</c> handler performs the following use case:

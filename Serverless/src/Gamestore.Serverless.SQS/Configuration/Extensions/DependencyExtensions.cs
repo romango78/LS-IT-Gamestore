@@ -1,18 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Gamestore.Application.Configuration.Extensions;
+using Gamestore.DataProvider.Origin.Configuration.Extensions;
+using Gamestore.Infrastructure.Abstractions.Configuration.Extensions;
 
 namespace Gamestore.Serverless.SQS.Configuration.Extensions;
 
 internal static class DependencyExtensions
 {
-    public static IServiceCollection AddApplicationDependencies(this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddLocalDependencies(this IServiceCollection services)
     {
-        ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(configuration);
+        services.AddApplication();
+        services.AddMiddleware();
 
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        services.AddOriginDataProviders();
 
         return services;
     }

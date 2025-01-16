@@ -1,4 +1,3 @@
-using Gamestore.Domain.Configurations.Extensions;
 using Gamestore.Serverless.SQS.Configuration.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,8 +27,7 @@ public class Startup
         services.AddOptions();
         //services.Configure<DataProviderSettings>(configuration.GetSection(nameof(DataProviderSettings)));
 
-        services.AddDomainDependencies();
-        services.AddApplicationDependencies(configuration);
+        services.AddLocalDependencies();
 
         //services.AddSteamDependencies(configuration);
 

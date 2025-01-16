@@ -35,7 +35,7 @@ public class Startup
 
         services.Configure<DataProviderSettings>(configuration.GetSection(nameof(DataProviderSettings)));
 
-        services.AddDomainDependencies();
+        services.AddDomain();
         services.AddSteamDependencies(configuration);
 
         services.AddSingleton<IValidator<Cart>, CartValidator>();
